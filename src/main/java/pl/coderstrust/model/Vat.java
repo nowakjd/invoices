@@ -1,4 +1,4 @@
-package pl.coderstrust.database;
+package pl.coderstrust.model;
 
 public enum Vat {
   RATE_0(0f),

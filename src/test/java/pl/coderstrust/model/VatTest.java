@@ -1,7 +1,8 @@
+package pl.coderstrust.model;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
-import pl.coderstrust.database.Vat;
 
 class VatTest {
 
