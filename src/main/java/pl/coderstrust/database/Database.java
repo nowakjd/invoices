@@ -4,7 +4,6 @@ import pl.coderstrust.model.Invoice;
 
 import java.util.Collection;
 
-
 public interface Database {
 
   void saveInvoice(Invoice invoice);
@@ -14,5 +13,4 @@ public interface Database {
   void updateInvoice(Invoice invoice);
 
   void deleteInvoiceById(int id);
-
 }
