@@ -13,8 +13,8 @@ import java.math.BigDecimal;
 
 class InvoiceEntryTest {
 
-  private static final double AMOUNT = 4;
   private static final String PRODUCT_NAME = "Microwave";
+  private static final double AMOUNT = 4;
   private static final String UNIT = "szt";
   private static final BigDecimal PRICE = BigDecimal.valueOf(125);
   private static final Vat VAT_RATE = null;
@@ -22,13 +22,35 @@ class InvoiceEntryTest {
   private static final BigDecimal GROSS_VALUE = BigDecimal.valueOf(165);
 
   @Test
+  void testSetters() {
+    InvoiceEntry entry = new InvoiceEntry();
+    entry.setProductName(PRODUCT_NAME);
+    entry.setAmount(AMOUNT);
+    entry.setUnit(UNIT);
+    entry.setPrice(PRICE);
+    entry.setVatRate(VAT_RATE);
+    entry.setNetValue(NET_VALUE);
+    entry.setGrossValue(GROSS_VALUE);
+
+    assertAll(
+        () -> assertEquals(PRODUCT_NAME, entry.getProductName()),
+        () -> assertEquals(AMOUNT, entry.getAmount()),
+        () -> assertEquals(UNIT, entry.getUnit()),
+        () -> assertEquals(PRICE, entry.getPrice()),
+        () -> assertEquals(VAT_RATE, entry.getVatRate()),
+        () -> assertEquals(NET_VALUE, entry.getNetValue()),
+        () -> assertEquals(GROSS_VALUE, entry.getGrossValue())
+    );
+  }
+
+  @Test
   void testGetters() {
-    InvoiceEntry entry = new InvoiceEntry(AMOUNT, PRODUCT_NAME, UNIT, PRICE, VAT_RATE, NET_VALUE,
+    InvoiceEntry entry = new InvoiceEntry(PRODUCT_NAME, AMOUNT, UNIT, PRICE, VAT_RATE, NET_VALUE,
         GROSS_VALUE);
 
     assertAll(
-        () -> assertEquals(AMOUNT, entry.getAmount()),
         () -> assertEquals(PRODUCT_NAME, entry.getProductName()),
+        () -> assertEquals(AMOUNT, entry.getAmount()),
         () -> assertEquals(UNIT, entry.getUnit()),
         () -> assertEquals(PRICE, entry.getPrice()),
         () -> assertEquals(VAT_RATE, entry.getVatRate()),
@@ -41,10 +63,10 @@ class InvoiceEntryTest {
   @DisplayName("Checking invalid value of amount")
   @ValueSource(doubles = {-1, 0})
   void checkSetInvalidAmount(double amount) {
+    final InvoiceEntry entry = new InvoiceEntry();
     IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
         () -> {
-          InvoiceEntry entry = new InvoiceEntry(amount, PRODUCT_NAME, UNIT, PRICE, VAT_RATE,
-              NET_VALUE, GROSS_VALUE);
+          entry.setAmount(amount);
         }
     );
     assertEquals("The amount must be greater than 0", exception.getMessage());
