@@ -4,19 +4,19 @@ import pl.coderstrust.service.StringValidator;
 
 import java.util.Objects;
 
-public class Address {
+public final class Address {
 
-  private final String street;
-  private final String number;
-  private final String city;
-  private final String zipCode;
+  private String street;
+  private String number;
+  private String city;
+  private String zipCode;
 
   Address(String street, String number, String city, String zipCode) {
-    StringValidator.validateZipCode(zipCode);
-    this.zipCode = zipCode;
     this.street = street;
     this.number = number;
     this.city = city;
+    StringValidator.validateZipCode(zipCode);
+    this.zipCode = zipCode;
   }
 
   String getStreet() {
