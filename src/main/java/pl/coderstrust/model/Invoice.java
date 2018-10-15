@@ -5,61 +5,51 @@ import java.util.List;
 
 public class Invoice {
 
-  private String number;
-  private LocalDate issueDate;
-  private Company seller;
-  private Company buyer;
-  private List<InvoiceEntry> entries;
+  private final long id;
+  private final String issue;
+  private final LocalDate issueDate;
+  private final Company seller;
+  private final Company buyer;
+  private final List<InvoiceEntry> entries;
 
-  public Invoice() {
-  }
 
-  public Invoice(String number, LocalDate issueDate, Company seller, Company buyer,
-      List<InvoiceEntry> entries) {
-    this.number = number;
+  public Invoice(long id, String issue, LocalDate issueDate, Company seller,
+      Company buyer, List<InvoiceEntry> entries) {
+    if (id <= 0) {
+      throw new IllegalArgumentException("The id should be greater than zero");
+    }
+    this.id = id;
+    this.issue = issue;
+    if (issueDate.isAfter(LocalDate.now())) {
+      throw new IllegalArgumentException("Passing date cannot be in the future");
+    }
     this.issueDate = issueDate;
     this.seller = seller;
     this.buyer = buyer;
     this.entries = entries;
   }
 
-  public String getNumber() {
-    return number;
+  public long getId() {
+    return id;
   }
 
-  public void setNumber(String number) {
-    this.number = number;
+  public String getIssue() {
+    return issue;
   }
 
   public LocalDate getIssueDate() {
     return issueDate;
   }
 
-  public void setIssueDate(LocalDate issueDate) {
-    this.issueDate = issueDate;
-  }
-
   public Company getSeller() {
     return seller;
-  }
-
-  public void setSeller(Company seller) {
-    this.seller = seller;
   }
 
   public Company getBuyer() {
     return buyer;
   }
 
-  public void setBuyer(Company buyer) {
-    this.buyer = buyer;
-  }
-
   public List<InvoiceEntry> getEntries() {
     return entries;
-  }
-
-  public void setEntries(List<InvoiceEntry> entries) {
-    this.entries = entries;
   }
 }
