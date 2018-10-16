@@ -4,52 +4,40 @@ import pl.coderstrust.service.StringValidator;
 
 class Company {
 
-  private int companyId;
-  private String companyName;
-  private Address address;
-  private String taxIdentificationNumber;
-  private String accountNumber;
+  private final int companyId;
+  private final String companyName;
+  private final Address address;
+  private final String taxIdentificationNumber;
+  private final String accountNumber;
+
+  Company(int companyId, String companyName, Address address,
+      String taxIdentificationNumber, String accountNumber) {
+    this.companyId = companyId;
+    this.companyName = companyName;
+    this.address = address;
+    StringValidator.validateTaxIdentificationNumber(taxIdentificationNumber);
+    this.taxIdentificationNumber = taxIdentificationNumber;
+    StringValidator.validateAccountNumber(accountNumber);
+    this.accountNumber = accountNumber;
+  }
 
   int getCompanyId() {
     return companyId;
-  }
-
-  void setCompanyId(int companyId) {
-    this.companyId = companyId;
   }
 
   String getCompanyName() {
     return companyName;
   }
 
-  void setCompanyName(String companyName) {
-    this.companyName = companyName;
-  }
-
   Address getAddress() {
     return address;
-  }
-
-  void setAddress(Address address) {
-    this.address = address;
   }
 
   String getTaxIdentificationNumber() {
     return taxIdentificationNumber;
   }
 
-  void setTaxIdentificationNumber(String taxIdentificationNumber) {
-    StringValidator.validateTaxIdentificationNumber(taxIdentificationNumber);
-    this.taxIdentificationNumber = taxIdentificationNumber;
-  }
-
   String getAccountNumber() {
     return accountNumber;
-  }
-
-  void setAccountNumber(String accountNumber) {
-    StringValidator.validateAccountNumber(accountNumber);
-    this.accountNumber = accountNumber;
-
   }
 }

@@ -8,28 +8,36 @@ public class StringValidator {
 
   private static final String REGEX_ACCOUNT_NUMBER = "(\\d{26})|((\\d{2} )(\\d{4} ){5}\\d{4})";
   private static final String REGEX_ZIP_CODE = "[0-9]{2}-[0-9]{3}";
+  private static StringValidator instance;
+
+  private StringValidator() {
+  }
+
+  public static synchronized StringValidator getInstance() {
+    if (instance == null) {
+      instance = new StringValidator();
+    }
+    return instance;
+  }
 
   public static void validateAccountNumber(String accountNumber) {
     accountNumber = removeWhiteSpaces(accountNumber);
-    if (isValidByRegex(REGEX_ACCOUNT_NUMBER, accountNumber)) {
-      return;
+    if (!isValidByRegex(REGEX_ACCOUNT_NUMBER, accountNumber)) {
+      throw new PatternSyntaxException("Syntax of account number is invalid:", accountNumber, -1);
     }
-    throw new PatternSyntaxException("Syntax of account number is invalid:", accountNumber, -1);
   }
 
   public static void validateZipCode(String zipCode) {
-    if (isValidByRegex(REGEX_ZIP_CODE, zipCode)) {
-      return;
+    if (!isValidByRegex(REGEX_ZIP_CODE, zipCode)) {
+      throw new PatternSyntaxException("Syntax of zip-code is invalid:", zipCode, -1);
     }
-    throw new PatternSyntaxException("Syntax of zip-code is invalid:", zipCode, -1);
   }
 
   public static void validateTaxIdentificationNumber(String taxIdentificationNumber) {
-    if (isTaxIdentificationNumberValid(taxIdentificationNumber)) {
-      return;
+    if (!isTaxIdentificationNumberValid(taxIdentificationNumber)) {
+      throw new PatternSyntaxException("Syntax of tax identyfication number is invalid:",
+          taxIdentificationNumber, -1);
     }
-    throw new PatternSyntaxException("Syntax of tax identyfication number is invalid:",
-        taxIdentificationNumber, -1);
   }
 
   private static boolean isValidByRegex(String regex, String expression) {
