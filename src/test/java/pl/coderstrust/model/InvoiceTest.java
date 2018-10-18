@@ -43,7 +43,7 @@ class InvoiceTest {
   void invalidValueOfIdTest(long id) {
     IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
         () -> {
-          Invoice invoice = new Invoice(id, ISSUE_DATE, ENTRIES, ISSUE, SELLER, BUYER);
+          new Invoice(id, ISSUE_DATE, ENTRIES, ISSUE, SELLER, BUYER);
         });
     assertEquals("The id should be greater than zero", exception.getMessage());
   }
@@ -53,7 +53,7 @@ class InvoiceTest {
   void testInvalidDate() {
     IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
         () -> {
-          Invoice invoice = new Invoice(ID, LocalDate.of(2018, 12, 10), ENTRIES, ISSUE, SELLER,
+          new Invoice(ID, LocalDate.of(2018, 12, 10), ENTRIES, ISSUE, SELLER,
               BUYER);
         });
     assertEquals("Passing date cannot be in the future", exception.getMessage());
