@@ -18,10 +18,10 @@ public class Invoice {
     if (id <= 0) {
       throw new IllegalArgumentException("The id should be greater than zero");
     }
-    this.id = id;
     if (issueDate.isAfter(LocalDate.now())) {
       throw new IllegalArgumentException("Passing date cannot be in the future");
     }
+    this.id = id;
     this.issueDate = issueDate;
     this.entries = entries != null ? new ArrayList(entries) : new ArrayList();
     this.issue = issue;
