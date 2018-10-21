@@ -1,16 +1,26 @@
 package pl.coderstrust.database;
 
+import pl.coderstrust.model.Company;
 import pl.coderstrust.model.Invoice;
 
+import java.time.LocalDate;
 import java.util.Collection;
 
 public interface Database {
 
-  void saveInvoice(Invoice invoice);
+  void save(Invoice invoice);
 
-  Collection<Invoice> getInvoices();
+  void update(Invoice invoice);
 
-  void updateInvoice(Invoice invoice);
+  void delete(long id);
 
-  void deleteInvoice(long id);
+  Collection<Invoice> findAll();
+
+  Collection<Invoice> findByBuyer(Company company);
+
+  Collection<Invoice> findBySeller(Company company);
+
+  Collection<Invoice> find(LocalDate fromDate, LocalDate toDate);
+
+
 }
