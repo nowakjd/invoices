@@ -8,19 +8,19 @@ import java.util.Collection;
 
 public interface Database {
 
-  void save(Invoice invoice);
+  void save(Invoice invoice) throws DatabaseOperationException;
 
-  void update(Invoice invoice);
+  void update(Invoice invoice) throws DatabaseOperationException;
 
-  void delete(long id);
+  void delete(long id) throws DatabaseOperationException;
 
-  Collection<Invoice> findAll();
+  Collection<Invoice> findAll() throws DatabaseOperationException;
 
-  Collection<Invoice> findByBuyer(Company company);
+  Collection<Invoice> findByBuyer(Company company) throws DatabaseOperationException;
 
-  Collection<Invoice> findBySeller(Company company);
+  Collection<Invoice> findBySeller(Company company) throws DatabaseOperationException;
 
-  Collection<Invoice> find(LocalDate fromDate, LocalDate toDate);
+  Collection<Invoice> find(LocalDate fromDate, LocalDate toDate) throws DatabaseOperationException;
 
 
 }
