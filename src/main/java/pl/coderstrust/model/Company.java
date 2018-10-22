@@ -2,7 +2,7 @@ package pl.coderstrust.model;
 
 import pl.coderstrust.service.StringValidator;
 
-class Company {
+public class Company {
 
   private final int companyId;
   private final String companyName;
