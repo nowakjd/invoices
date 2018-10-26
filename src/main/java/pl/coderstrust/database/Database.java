@@ -10,7 +10,7 @@ public interface Database {
 
   void save(Invoice invoice) throws DatabaseOperationException;
 
-  void deleteById(Long id) throws DatabaseOperationException;
+  void delete(Long id) throws DatabaseOperationException;
 
   Collection<Invoice> findAll() throws DatabaseOperationException;
 
@@ -20,5 +20,5 @@ public interface Database {
 
   Collection<Invoice> findByDate(LocalDate fromDate, LocalDate toDate) throws DatabaseOperationException;
 
-  Invoice findById(Long id) throws DatabaseOperationException;
+  Invoice findOne(Long id) throws DatabaseOperationException;
 }
