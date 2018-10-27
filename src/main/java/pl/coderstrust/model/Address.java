@@ -1,5 +1,7 @@
 package pl.coderstrust.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import pl.coderstrust.service.StringValidator;
 
 import java.util.Objects;
@@ -11,7 +13,9 @@ public class Address {
   private final String city;
   private final String zipCode;
 
-  public Address(String street, String number, String city, String zipCode) {
+  @JsonCreator
+  public Address(@JsonProperty("street") String street, @JsonProperty("number") String number,
+      @JsonProperty("city") String city, @JsonProperty("zipCode") String zipCode) {
     StringValidator.validateZipCode(zipCode);
     this.zipCode = zipCode;
     this.street = street;
@@ -19,19 +23,19 @@ public class Address {
     this.city = city;
   }
 
-  String getStreet() {
+  public String getStreet() {
     return street;
   }
 
-  String getNumber() {
+  public String getNumber() {
     return number;
   }
 
-  String getCity() {
+  public String getCity() {
     return city;
   }
 
-  String getZipCode() {
+  public String getZipCode() {
     return zipCode;
   }
 

@@ -1,5 +1,8 @@
 package pl.coderstrust.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.math.BigDecimal;
 
 public class InvoiceEntry {
@@ -12,8 +15,12 @@ public class InvoiceEntry {
   private final BigDecimal netValue;
   private final BigDecimal grossValue;
 
-  public InvoiceEntry(double amount, String productName, String unit, BigDecimal price,
-      Vat vatRate, BigDecimal netValue, BigDecimal grossValue) {
+  @JsonCreator
+  public InvoiceEntry(@JsonProperty("amount") double amount,
+      @JsonProperty("productName") String productName, @JsonProperty("unit") String unit,
+      @JsonProperty("price") BigDecimal price,
+      @JsonProperty("vatRate") Vat vatRate, @JsonProperty("netValue") BigDecimal netValue,
+      @JsonProperty("grossValue") BigDecimal grossValue) {
     if (amount <= 0) {
       throw new IllegalArgumentException("The amount must be greater than 0");
     }

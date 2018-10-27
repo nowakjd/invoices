@@ -39,7 +39,7 @@ class InvoiceTest {
 
   @ParameterizedTest
   @DisplayName("Test invalid values of id")
-  @ValueSource(longs = {-1, 0})
+  @ValueSource(longs = {-2, -1})
   void invalidValueOfIdTest(long id) {
     IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
         () -> new Invoice(id, ISSUE_DATE, ENTRIES, ISSUE, SELLER, BUYER));
