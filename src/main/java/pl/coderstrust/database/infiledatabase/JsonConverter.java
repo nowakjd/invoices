@@ -1,6 +1,5 @@
-package pl.coderstrust.database;
+package pl.coderstrust.database.infiledatabase;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -24,7 +23,7 @@ public class JsonConverter {
     return objectMapper.writeValueAsString(invoice);
   }
 
-  public Invoice convert(String line) throws IOException {
+  private Invoice convert(String line) throws IOException {
     return objectMapper.readValue(line, Invoice.class);
   }
 

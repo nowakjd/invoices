@@ -1,15 +1,15 @@
-package pl.coderstrust.database;
+package pl.coderstrust.database.infiledatabase;
 
-import pl.coderstrust.model.Invoice;
+import pl.coderstrust.database.DatabaseOperationException;
 
-import java.io.File;
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class FileProcessor {
 
@@ -20,15 +20,12 @@ public class FileProcessor {
   }
 
   public void addLine(String line) throws DatabaseOperationException {
-    PrintWriter printWriter;
-    try {
-      printWriter = new PrintWriter(new FileWriter(fileName, true));
+    try (PrintWriter printWriter = new PrintWriter(new FileWriter(fileName, true))
+    ) {
+      printWriter.println(line);
     } catch (IOException exc) {
       throw new DatabaseOperationException("error during adding to file");
     }
-    printWriter.println(line);
-    printWriter.close();
-
   }
 
   public void removeLine(String lineToRemove) throws DatabaseOperationException {
@@ -40,9 +37,8 @@ public class FileProcessor {
         if (lineFromFile.equals(lineToRemove)) {
           int spaceInFile = lineFromFile.getBytes().length;
           randomAccessFile.seek(randomAccessFile.getFilePointer() - spaceInFile - 1);
-          randomAccessFile.writeBytes("empty");
-
-
+          @SuppressWarnings("ReplaceAllDot") String emptyline = lineFromFile.replaceAll(".", " ");
+          randomAccessFile.writeBytes(emptyline);
         }
       }
     } catch (FileNotFoundException exception) {
@@ -50,30 +46,21 @@ public class FileProcessor {
     } catch (IOException exception) {
       throw new DatabaseOperationException("error during processing database");
     }
-
-
   }
 
-  public ArrayList<String> getLines() throws DatabaseOperationException {
-    Scanner scanner;
+  public ArrayList<String> getLines() throws IOException {
     String line;
-    try {
-      scanner = new Scanner(new File(fileName));
-    } catch (FileNotFoundException exception) {
-      throw new DatabaseOperationException("database not found");
-    }
-
     ArrayList<String> lines = new ArrayList<>();
-
-    while (scanner.hasNextLine()) {
-      line = scanner.nextLine();
-      if (!line.substring(0, 5).equals("empty")) {
-        lines.add(line);
+    try (
+        FileReader fileReader = new FileReader(fileName);
+        BufferedReader bufferedReader = new BufferedReader(
+            fileReader)) {
+      while ((line = bufferedReader.readLine()) != null) {
+        if (line.substring(0, 1).equals("{")) {
+          lines.add(line);
+        }
       }
     }
-    scanner.close();
-
     return lines;
   }
-
 }

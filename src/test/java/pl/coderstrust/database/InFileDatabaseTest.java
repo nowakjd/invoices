@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Scanner;
 
 class InFileDatabaseTest {
 
@@ -71,6 +72,13 @@ class InFileDatabaseTest {
     invoice6 = new Invoice(0, yesterday, invoiceEntries, "FA/444/2018", seller2, buyer2);
   }
 
+  @AfterEach
+  public void cleanUpEach() {
+    File database = new File("database.txt");
+    File id = new File("id.txt");
+    database.delete();
+    id.delete();
+  }
 
   @Test
   @DisplayName("Update invoice with existing id")
@@ -128,9 +136,9 @@ class InFileDatabaseTest {
     inFileDatabase.save(invoice6);
     assertEquals(3, inFileDatabase.findAll().size());
     Collection<Invoice> actual1 = inFileDatabase
-        .findByDate(LocalDate.now(), LocalDate.now().minusDays(4));
+        .findByDate(LocalDate.now().minusDays(4), LocalDate.now());
     Collection<Invoice> actual2 = inFileDatabase
-        .findByDate(LocalDate.now().minusDays(6), LocalDate.now().minusDays(10));
+        .findByDate(LocalDate.now().minusDays(10), LocalDate.now().minusDays(6));
     assertEquals(2, actual1.size());
     assertEquals(1, actual2.size());
   }
@@ -143,11 +151,5 @@ class InFileDatabaseTest {
 
   }
 
-  @AfterEach
-  public void cleanUpEach() {
-    File database = new File("database.txt");
-    File id = new File("id.txt");
-    database.delete();
-    id.delete();
-  }
+
 }

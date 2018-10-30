@@ -1,4 +1,6 @@
-package pl.coderstrust.database;
+package pl.coderstrust.database.infiledatabase;
+
+import pl.coderstrust.database.DatabaseOperationException;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -7,11 +9,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 
-class NewId {
+public class IdGenerator {
 
   private String idFileName;
 
-  public NewId(String idFileName) throws DatabaseOperationException {
+  public IdGenerator(String idFileName) throws DatabaseOperationException {
     this.idFileName = idFileName;
     File file = new File(idFileName);
     try {

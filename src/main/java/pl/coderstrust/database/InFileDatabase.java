@@ -2,30 +2,28 @@ package pl.coderstrust.database;
 
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import pl.coderstrust.database.infiledatabase.FileProcessor;
+import pl.coderstrust.database.infiledatabase.IdGenerator;
+import pl.coderstrust.database.infiledatabase.JsonConverter;
 import pl.coderstrust.model.Company;
 import pl.coderstrust.model.Invoice;
-import pl.coderstrust.model.InvoiceEntry;
 
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 public class InFileDatabase implements Database {
 
-  private String databaseFileName;
-  private NewId newId;
-  private ArrayList<Invoice> invoices;
+  private IdGenerator idGenerator;
   private FileProcessor fileProcessor;
   private JsonConverter jsonConverter;
 
   public InFileDatabase(String databaseFileName, String idFileName)
       throws DatabaseOperationException {
-    this.databaseFileName = databaseFileName;
-    newId = new NewId(idFileName);
+    idGenerator = new IdGenerator(idFileName);
     fileProcessor = new FileProcessor(databaseFileName);
     jsonConverter = new JsonConverter();
   }
@@ -33,18 +31,14 @@ public class InFileDatabase implements Database {
   @Override
   public void save(Invoice invoice) throws DatabaseOperationException {
     final long id = invoice.getId();
-    final LocalDate issueDate = invoice.getIssueDate();
-    final List<InvoiceEntry> entries = invoice.getEntries();
-    final String issue = invoice.getIssue();
-    final Company seller = invoice.getSeller();
-    final Company buyer = invoice.getBuyer();
     try {
       if (id == 0) {
         fileProcessor.addLine(jsonConverter
-            .convert(new Invoice(newId.getNewId(), issueDate, entries, issue, seller, buyer)));
-
+            .convert(
+                new Invoice(idGenerator.getNewId(), invoice.getIssueDate(), invoice.getEntries(),
+                    invoice.getIssue(), invoice.getSeller(), invoice.getBuyer())));
       } else {
-        delete(invoice.getId());
+        delete(id);
         fileProcessor.addLine(jsonConverter.convert(invoice));
       }
     } catch (JsonProcessingException exception) {
@@ -67,49 +61,45 @@ public class InFileDatabase implements Database {
 
   @Override
   public Collection<Invoice> findAll() throws DatabaseOperationException {
-    getAll();
-    return invoices;
+    return getAll();
   }
 
   @Override
   public Collection<Invoice> findByBuyer(Company company) throws DatabaseOperationException {
-    getAll();
-    return (ArrayList<Invoice>) invoices.stream()
+    return getAll().stream()
         .filter(invoice -> company.equals(invoice.getBuyer())).collect(Collectors.toList());
   }
 
   @Override
   public Collection<Invoice> findBySeller(Company company) throws DatabaseOperationException {
-    getAll();
-    return invoices.stream()
+
+    return getAll().stream()
         .filter(invoice -> company.equals(invoice.getSeller())).collect(Collectors.toList());
   }
 
   @Override
   public Collection<Invoice> findByDate(LocalDate fromDate, LocalDate toDate)
       throws DatabaseOperationException {
-    getAll();
-    return (ArrayList<Invoice>) invoices.stream()
-        .filter(invoice -> fromDate.isAfter(invoice.getIssueDate()) && toDate
-            .isBefore(invoice.getIssueDate()) || fromDate.isEqual(invoice.getIssueDate())
-            || toDate.isEqual(invoice.getIssueDate())).collect(Collectors.toList());
+    return getAll().stream()
+        .filter(invoice -> !fromDate.isAfter(invoice.getIssueDate()) && !toDate
+            .isBefore(invoice.getIssueDate())).collect(Collectors.toList());
   }
 
   @Override
   public Invoice findOne(Long id) throws DatabaseOperationException {
-    getAll();
+
     Invoice result;
     try {
-      result = invoices.stream().filter(invoice -> id == invoice.getId()).findFirst().get();
+      result = getAll().stream().filter(invoice -> id == invoice.getId()).findFirst().get();
     } catch (NoSuchElementException exception) {
       throw new DatabaseOperationException("Invoice of id: " + id + " does not exist.");
     }
     return result;
   }
 
-  private void getAll() throws DatabaseOperationException {
+  private ArrayList<Invoice> getAll() throws DatabaseOperationException {
     try {
-      invoices = jsonConverter.convert(fileProcessor.getLines());
+      return jsonConverter.convert(fileProcessor.getLines());
     } catch (IOException exception) {
       exception.printStackTrace();
       throw new DatabaseOperationException("IOException");
