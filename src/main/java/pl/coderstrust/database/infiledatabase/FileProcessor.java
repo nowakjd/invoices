@@ -56,7 +56,7 @@ public class FileProcessor {
         BufferedReader bufferedReader = new BufferedReader(
             fileReader)) {
       while ((line = bufferedReader.readLine()) != null) {
-        if (line.substring(0, 1).equals("{")) {
+        if (!line.substring(0, 1).equals(" ")) {
           lines.add(line);
         }
       }

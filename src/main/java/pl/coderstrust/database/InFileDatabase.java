@@ -1,6 +1,5 @@
 package pl.coderstrust.database;
 
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import pl.coderstrust.database.infiledatabase.FileProcessor;
 import pl.coderstrust.database.infiledatabase.IdGenerator;
@@ -20,6 +19,12 @@ public class InFileDatabase implements Database {
   private IdGenerator idGenerator;
   private FileProcessor fileProcessor;
   private JsonConverter jsonConverter;
+
+  public InFileDatabase(FileProcessor fileProcessor , IdGenerator idGenerator, JsonConverter jsonConverter) {
+    this.fileProcessor = fileProcessor;
+    this.idGenerator= idGenerator;
+    this.jsonConverter=jsonConverter;
+  }
 
   public InFileDatabase(String databaseFileName, String idFileName)
       throws DatabaseOperationException {
