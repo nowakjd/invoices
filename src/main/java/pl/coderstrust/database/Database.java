@@ -8,7 +8,7 @@ import java.util.Collection;
 
 public interface Database {
 
-  void save(Invoice invoice) throws DatabaseOperationException;
+  Invoice save(Invoice invoice) throws DatabaseOperationException;
 
   void delete(Long id) throws DatabaseOperationException;
 
