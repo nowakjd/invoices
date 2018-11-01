@@ -20,10 +20,11 @@ public class InFileDatabase implements Database {
   private FileProcessor fileProcessor;
   private JsonConverter jsonConverter;
 
-  public InFileDatabase(FileProcessor fileProcessor , IdGenerator idGenerator, JsonConverter jsonConverter) {
+  public InFileDatabase(FileProcessor fileProcessor, IdGenerator idGenerator,
+      JsonConverter jsonConverter) {
     this.fileProcessor = fileProcessor;
-    this.idGenerator= idGenerator;
-    this.jsonConverter=jsonConverter;
+    this.idGenerator = idGenerator;
+    this.jsonConverter = jsonConverter;
   }
 
   public InFileDatabase(String databaseFileName, String idFileName)
@@ -66,26 +67,31 @@ public class InFileDatabase implements Database {
 
   @Override
   public Collection<Invoice> findAll() throws DatabaseOperationException {
-    return getAll();
+    try {
+      return jsonConverter.convert(fileProcessor.getLines());
+    } catch (IOException exception) {
+      exception.printStackTrace();
+      throw new DatabaseOperationException("IOException");
+    }
   }
 
   @Override
   public Collection<Invoice> findByBuyer(Company company) throws DatabaseOperationException {
-    return getAll().stream()
+    return findAll().stream()
         .filter(invoice -> company.equals(invoice.getBuyer())).collect(Collectors.toList());
   }
 
   @Override
   public Collection<Invoice> findBySeller(Company company) throws DatabaseOperationException {
 
-    return getAll().stream()
+    return findAll().stream()
         .filter(invoice -> company.equals(invoice.getSeller())).collect(Collectors.toList());
   }
 
   @Override
   public Collection<Invoice> findByDate(LocalDate fromDate, LocalDate toDate)
       throws DatabaseOperationException {
-    return getAll().stream()
+    return findAll().stream()
         .filter(invoice -> !fromDate.isAfter(invoice.getIssueDate()) && !toDate
             .isBefore(invoice.getIssueDate())).collect(Collectors.toList());
   }
@@ -95,20 +101,12 @@ public class InFileDatabase implements Database {
 
     Invoice result;
     try {
-      result = getAll().stream().filter(invoice -> id == invoice.getId()).findFirst().get();
+      result = findAll().stream().filter(invoice -> id == invoice.getId()).findFirst().get();
     } catch (NoSuchElementException exception) {
       throw new DatabaseOperationException("Invoice of id: " + id + " does not exist.");
     }
     return result;
   }
 
-  private ArrayList<Invoice> getAll() throws DatabaseOperationException {
-    try {
-      return jsonConverter.convert(fileProcessor.getLines());
-    } catch (IOException exception) {
-      exception.printStackTrace();
-      throw new DatabaseOperationException("IOException");
-    }
-  }
 
 }
