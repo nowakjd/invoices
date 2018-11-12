@@ -1,15 +1,14 @@
 package pl.coderstrust.database;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import pl.coderstrust.database.infiledatabase.FileProcessor;
-import pl.coderstrust.database.infiledatabase.IdGenerator;
-import pl.coderstrust.database.infiledatabase.JsonConverter;
+import pl.coderstrust.database.file.FileProcessor;
+import pl.coderstrust.database.file.IdGenerator;
+import pl.coderstrust.database.file.JsonConverter;
 import pl.coderstrust.model.Company;
 import pl.coderstrust.model.Invoice;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
@@ -25,13 +24,6 @@ public class InFileDatabase implements Database {
     this.fileProcessor = fileProcessor;
     this.idGenerator = idGenerator;
     this.jsonConverter = jsonConverter;
-  }
-
-  public InFileDatabase(String databaseFileName, String idFileName)
-      throws DatabaseOperationException {
-    idGenerator = new IdGenerator(idFileName);
-    fileProcessor = new FileProcessor(databaseFileName);
-    jsonConverter = new JsonConverter();
   }
 
   @Override

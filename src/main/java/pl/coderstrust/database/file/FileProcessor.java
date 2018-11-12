@@ -1,4 +1,4 @@
-package pl.coderstrust.database.infiledatabase;
+package pl.coderstrust.database.file;
 
 import pl.coderstrust.database.DatabaseOperationException;
 
