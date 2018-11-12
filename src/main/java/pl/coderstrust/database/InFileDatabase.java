@@ -27,14 +27,14 @@ public class InFileDatabase implements Database {
   }
 
   @Override
-  public void save(Invoice invoice) throws DatabaseOperationException {
+  public Invoice save(Invoice invoice) throws DatabaseOperationException {
     final Long id = invoice.getId();
     try {
       if (id == null) {
+        invoice = new Invoice(idGenerator.getNewId(), invoice.getIssueDate(), invoice.getEntries(),
+            invoice.getIssue(), invoice.getSeller(), invoice.getBuyer());
         fileProcessor.addLine(jsonConverter
-            .convert(
-                new Invoice(idGenerator.getNewId(), invoice.getIssueDate(), invoice.getEntries(),
-                    invoice.getIssue(), invoice.getSeller(), invoice.getBuyer())));
+            .convert(invoice));
       } else {
         delete(id);
         fileProcessor.addLine(jsonConverter.convert(invoice));
@@ -43,6 +43,7 @@ public class InFileDatabase implements Database {
       exception.printStackTrace();
       throw new DatabaseOperationException("error during json converting");
     }
+    return invoice;
   }
 
   @Override

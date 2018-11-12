@@ -103,7 +103,7 @@ class InFileDatabaseTest {
   @DisplayName("Save new invoice")
   void saveInvoice() throws DatabaseOperationException, IOException {
     when(idGeneratorMock.getNewId()).thenReturn(5L);
-    inFileDatabase.save(invoice1);
+    assertEquals(invoice2, inFileDatabase.save(invoice1));
     verify(jsonConverterMock, only()).convert(ArgumentMatchers.refEq(invoice2));
     verify(fileProcessorMock, never()).removeLine(any());
     verify(fileProcessorMock, only()).addLine(any());
