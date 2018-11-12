@@ -36,7 +36,6 @@ public class IdGenerator {
       scanner = new Scanner(fileReader);
       String line = (scanner.nextLine());
       id = Long.valueOf(line);
-
     } catch (FileNotFoundException ex) {
       throw new DatabaseOperationException("idFile error");
     }
@@ -49,6 +48,5 @@ public class IdGenerator {
       throw new DatabaseOperationException("idFile error");
     }
     return id;
-
   }
 }

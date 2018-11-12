@@ -38,7 +38,6 @@ import java.util.List;
 @ExtendWith(MockitoExtension.class)
 class InFileDatabaseTest {
 
-
   private static Invoice invoice1;
   private static Invoice invoice2;
   private static Invoice invoice3;
@@ -120,7 +119,6 @@ class InFileDatabaseTest {
     verify(fileProcessorMock, times(1)).addLine(any());
   }
 
-
   @Test
   @DisplayName("Find all invoices")
   void findAllTest() throws DatabaseOperationException, IOException {
@@ -191,5 +189,4 @@ class InFileDatabaseTest {
     assertThrows(DatabaseOperationException.class, () -> inFileDatabase.delete(123L));
     assertThrows(DatabaseOperationException.class, () -> inFileDatabase.findOne(123L));
   }
-
 }

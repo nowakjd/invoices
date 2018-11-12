@@ -55,7 +55,6 @@ public class InFileDatabase implements Database {
       exception.printStackTrace();
       throw new DatabaseOperationException("error during json converting");
     }
-
   }
 
   @Override
