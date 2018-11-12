@@ -28,9 +28,9 @@ public class InFileDatabase implements Database {
 
   @Override
   public void save(Invoice invoice) throws DatabaseOperationException {
-    final long id = invoice.getId();
+    final Long id = invoice.getId();
     try {
-      if (id == 0) {
+      if (id == null) {
         fileProcessor.addLine(jsonConverter
             .convert(
                 new Invoice(idGenerator.getNewId(), invoice.getIssueDate(), invoice.getEntries(),
@@ -75,7 +75,6 @@ public class InFileDatabase implements Database {
 
   @Override
   public Collection<Invoice> findBySeller(Company company) throws DatabaseOperationException {
-
     return findAll().stream()
         .filter(invoice -> company.equals(invoice.getSeller())).collect(Collectors.toList());
   }
@@ -90,15 +89,12 @@ public class InFileDatabase implements Database {
 
   @Override
   public Invoice findOne(Long id) throws DatabaseOperationException {
-
     Invoice result;
     try {
-      result = findAll().stream().filter(invoice -> id == invoice.getId()).findFirst().get();
+      result = findAll().stream().filter(invoice -> id.equals(invoice.getId())).findFirst().get();
     } catch (NoSuchElementException exception) {
       throw new DatabaseOperationException("Invoice of id: " + id + " does not exist.");
     }
     return result;
   }
-
-
 }

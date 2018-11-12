@@ -40,7 +40,7 @@ class InvoiceTest {
   @ParameterizedTest
   @DisplayName("Test invalid values of id")
   @ValueSource(longs = {-2, -1})
-  void invalidValueOfIdTest(long id) {
+  void invalidValueOfIdTest(Long id) {
     IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
         () -> new Invoice(id, ISSUE_DATE, ENTRIES, ISSUE, SELLER, BUYER));
     assertEquals("The id should be greater than zero", exception.getMessage());

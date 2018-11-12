@@ -16,7 +16,6 @@ class FileProcessorTest {
       "src" + System.getProperty("file.separator") + "test" + System.getProperty("file.separator")
           + "resources" + System.getProperty("file.separator");
 
-
   @Test
   void shouldSaveLines() throws DatabaseOperationException, IOException {
     File actual = new File(testResouserceDirectory + "actual");

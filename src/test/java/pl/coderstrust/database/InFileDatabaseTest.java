@@ -85,16 +85,16 @@ class InFileDatabaseTest {
     List<InvoiceEntry> invoiceEntries = new ArrayList<>(
         Arrays.asList(invoiceEntry1, invoiceEntry2, invoiceEntry3));
     LocalDate weekAgo = LocalDate.now().minusDays(7);
-    invoice1 = new Invoice(0, weekAgo, invoiceEntries, "FA/111/2018", seller1, buyer1);
-    invoice2 = new Invoice(5, weekAgo, invoiceEntries, "FA/111/2018", seller1, buyer1);
+    invoice1 = new Invoice(null, weekAgo, invoiceEntries, "FA/111/2018", seller1, buyer1);
+    invoice2 = new Invoice(5L, weekAgo, invoiceEntries, "FA/111/2018", seller1, buyer1);
     LocalDate fourDaysAgo = LocalDate.now().minusDays(4);
     invoice3 = new Invoice(1L, fourDaysAgo, invoiceEntries, "FA/333/2018", seller2, buyer1);
     invoice4 = new Invoice(2L, weekAgo, invoiceEntries, "FA/444/2018", seller2, buyer2);
     LocalDate today = LocalDate.now();
     invoice5 = new Invoice(666L, today, invoiceEntries, "FA/444/2018", seller2, buyer2);
     LocalDate yesterday = LocalDate.now().minusDays(1);
-    invoice6 = new Invoice(5, yesterday, invoiceEntries, "FA/444/2018", seller2, buyer2);
-    invoice7 = new Invoice(128, yesterday, invoiceEntries, "FA/444/2018", seller2, buyer2);
+    invoice6 = new Invoice(5L, yesterday, invoiceEntries, "FA/444/2018", seller2, buyer2);
+    invoice7 = new Invoice(128L, yesterday, invoiceEntries, "FA/444/2018", seller2, buyer2);
     allInvoices
         = new ArrayList<>(Arrays.asList(invoice3, invoice4, invoice5, invoice6));
   }
