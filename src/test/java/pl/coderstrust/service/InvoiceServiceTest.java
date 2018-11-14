@@ -36,9 +36,11 @@ class InvoiceServiceTest {
   @BeforeEach
   void setUp() {
     invoiceService = new InvoiceService(database);
-    invoice = new Invoice();
+    invoice = new Invoice(1, LocalDate.of(2018, 10, 1),
+        null, "2018/01/1234567", null, null);
     invoiceCollection = new ArrayList<>();
-    company = new Company();
+    company = new Company(1,"Kogucik",null,
+        "6570011469","54114020040000340277983541");
     fromDate = LocalDate.now().minusDays(7);
     toDate = LocalDate.now();
   }

@@ -10,7 +10,7 @@ public class Company {
   private final String taxIdentificationNumber;
   private final String accountNumber;
 
-  Company(int companyId, String companyName, Address address,
+  public Company(int companyId, String companyName, Address address,
       String taxIdentificationNumber, String accountNumber) {
     this.companyId = companyId;
     this.companyName = companyName;

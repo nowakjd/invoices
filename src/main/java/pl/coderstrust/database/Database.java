@@ -18,7 +18,8 @@ public interface Database {
 
   Collection<Invoice> findBySeller(Company company) throws DatabaseOperationException;
 
-  Collection<Invoice> findByDate(LocalDate fromDate, LocalDate toDate) throws DatabaseOperationException;
+  Collection<Invoice> findByDate(LocalDate fromDate, LocalDate toDate)
+      throws DatabaseOperationException;
 
   Invoice findOne(Long id) throws DatabaseOperationException;
 }
