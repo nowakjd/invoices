@@ -1,6 +1,5 @@
 package pl.coderstrust.service;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -43,14 +42,14 @@ class InvoiceServiceTest {
   @DisplayName("Checking the save method call")
   void saveMethodTest() throws DatabaseOperationException {
     invoiceService.save(invoice);
-    verify(database).save(any(Invoice.class));
+    verify(database).save(invoice);
   }
 
   @Test
   @DisplayName("Checking the delete method call")
   void deleteMethodTest() throws DatabaseOperationException {
     invoiceService.delete(1L);
-    verify(database).delete(any());
+    verify(database).delete(1L);
   }
 
   @Test
