@@ -2,6 +2,7 @@ package pl.coderstrust.service;
 
 import static org.mockito.Mockito.verify;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,9 +20,9 @@ import java.time.LocalDate;
 class InvoiceServiceTest {
 
   private InvoiceService invoiceService;
-  private Company company;
-  private LocalDate fromDate;
-  private LocalDate toDate;
+  private static Company company;
+  private static LocalDate fromDate;
+  private static LocalDate toDate;
 
   @Mock
   private Database database;
@@ -29,13 +30,17 @@ class InvoiceServiceTest {
   @Mock
   private Invoice invoice;
 
+  @BeforeAll
+  static void beforeAll() {
+    company = new Company(1, "Kogucik", null,
+        "6570011469", "54114020040000340277983541");
+    fromDate = LocalDate.of(2018, 10, 1);
+    toDate = LocalDate.of(2018, 10, 31);
+  }
+
   @BeforeEach
   void setUp() {
     invoiceService = new InvoiceService(database);
-    company = new Company(1, "Kogucik", null,
-        "6570011469", "54114020040000340277983541");
-    fromDate = LocalDate.now().minusDays(7);
-    toDate = LocalDate.now();
   }
 
   @Test
