@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.commons.io.FileUtils;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import pl.coderstrust.database.DatabaseOperationException;
 
@@ -12,17 +13,23 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 class FileProcessorTest {
-  private static final String testResouserceDirectory =
-      "src" + System.getProperty("file.separator") + "test" + System.getProperty("file.separator")
-          + "resources" + System.getProperty("file.separator");
+
+  private static final String fileSeparator = System.getProperty("file.separator");
+  private static final String resourcesPath =
+      "src" + fileSeparator + "test" + fileSeparator
+          + "resources" + fileSeparator;
+  private final File actual = new File(resourcesPath + "actual");
+
+  @AfterEach
+  void cleanUp() {
+    actual.delete();
+  }
 
   @Test
   void shouldSaveLines() throws DatabaseOperationException, IOException {
-    File actual = new File(testResouserceDirectory + "actual");
-    assertTrue(actual.delete());
-    File saveLineExpected = new File(testResouserceDirectory + "saveLineExpected");
+    File saveLineExpected = new File(resourcesPath + "saveLineExpected");
     FileProcessor fileProcessor = new FileProcessor(
-         testResouserceDirectory + "actual");
+        resourcesPath + "actual");
     fileProcessor.addLine("a");
     fileProcessor.addLine("a b");
     assertTrue(FileUtils.contentEquals(saveLineExpected, actual));
@@ -30,13 +37,11 @@ class FileProcessorTest {
 
   @Test
   void shouldRemoveLine() throws DatabaseOperationException, IOException {
-    File actual = new File(testResouserceDirectory + "actual");
-    File removeLinesStart = new File(testResouserceDirectory + "removeLinesStart");
-    assertTrue(actual.delete());
+    File removeLinesStart = new File(resourcesPath + "removeLinesStart");
     FileUtils.copyFile(removeLinesStart, actual);
-    FileProcessor fileProcessor = new FileProcessor(testResouserceDirectory + "actual");
+    FileProcessor fileProcessor = new FileProcessor(resourcesPath + "actual");
     fileProcessor.removeLine("abcd");
-    File removeLinesExpected = new File(testResouserceDirectory + "removeLinesExpected");
+    File removeLinesExpected = new File(resourcesPath + "removeLinesExpected");
     assertTrue(FileUtils.contentEquals(removeLinesExpected, actual));
   }
 
@@ -47,7 +52,7 @@ class FileProcessorTest {
     expected.add("abc");
     expected.add("abcde");
     expected.add("abcdef");
-    FileProcessor fileProcessor = new FileProcessor(testResouserceDirectory + "getLinesStart");
+    FileProcessor fileProcessor = new FileProcessor(resourcesPath + "getLinesStart");
     assertArrayEquals(expected.toArray(), fileProcessor.getLines().toArray());
   }
 }

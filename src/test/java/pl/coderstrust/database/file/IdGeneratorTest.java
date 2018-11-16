@@ -1,9 +1,9 @@
 package pl.coderstrust.database.file;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.commons.io.FileUtils;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import pl.coderstrust.database.DatabaseOperationException;
 
@@ -12,15 +12,20 @@ import java.io.IOException;
 
 class IdGeneratorTest {
 
-  private String fileName =
-      "src" + System.getProperty("file.separator") + "test" + System.getProperty("file.separator")
-          + "resources" + System.getProperty("file.separator") + "id";
-  private File database = new File(fileName);
-  private File backup = new File(fileName + ".bak");
+  private static final String fileSeparator = System.getProperty("file.separator");
+  private static final String fileName =
+      "src" + fileSeparator + "test" + fileSeparator
+          + "resources" + fileSeparator + "id";
+  private final File database = new File(fileName);
+  private final File backup = new File(fileName + ".bak");
+
+  @AfterEach
+  void cleanUp() {
+    database.delete();
+  }
 
   @Test
-  public void shouldReadFromFile() throws DatabaseOperationException, IOException {
-    assertTrue(database.delete());
+  void shouldReadFromFile() throws DatabaseOperationException, IOException {
     FileUtils.copyFile(backup, database);
     IdGenerator idGenerator = new IdGenerator(fileName);
     assertEquals(5, idGenerator.getNewId());
@@ -28,8 +33,7 @@ class IdGeneratorTest {
   }
 
   @Test
-  public void shouldStartWithoutFile() throws DatabaseOperationException {
-    assertTrue(database.delete());
+  void shouldStartWithoutFile() throws DatabaseOperationException {
     IdGenerator idGenerator = new IdGenerator(fileName);
     assertEquals(1, idGenerator.getNewId());
     assertEquals(2, idGenerator.getNewId());
