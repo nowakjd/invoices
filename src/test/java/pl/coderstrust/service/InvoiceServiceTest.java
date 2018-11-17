@@ -18,11 +18,11 @@ import java.time.LocalDate;
 
 @ExtendWith(MockitoExtension.class)
 class InvoiceServiceTest {
-
-  private InvoiceService invoiceService;
+  
   private static Company company;
   private static LocalDate fromDate;
   private static LocalDate toDate;
+  private InvoiceService invoiceService;
 
   @Mock
   private Database database;
