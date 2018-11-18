@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
+import java.util.List;
 
 public class FileProcessor {
 
@@ -48,9 +49,9 @@ public class FileProcessor {
     }
   }
 
-  public ArrayList<String> getLines() throws IOException {
+  public List<String> getLines() throws IOException {
     String line;
-    ArrayList<String> lines = new ArrayList<>();
+    List<String> lines = new ArrayList<>();
     try (
         FileReader fileReader = new FileReader(fileName);
         BufferedReader bufferedReader = new BufferedReader(

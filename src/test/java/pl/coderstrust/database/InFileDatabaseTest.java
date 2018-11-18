@@ -33,22 +33,22 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
 class InFileDatabaseTest {
 
+  private static final LocalDate referenceDate = LocalDate.parse("2018-11-11");
   private static Invoice invoice1;
   private static Invoice invoice2;
   private static Invoice invoice3;
   private static Invoice invoice4;
   private static Invoice invoice5;
   private static Company seller1;
-  private static Company seller2;
   private static Company buyer1;
-  private static Company buyer2;
-  private static final ArrayList<String> jsonsListMock = new ArrayList<>(
-      Arrays.asList("jsonsListMock"));
+  private static final List<String> jsonsListMock = new ArrayList<>(
+      Collections.singletonList("jsonsListMock"));
   private static ArrayList<Invoice> allInvoices;
 
   @Mock
@@ -67,11 +67,12 @@ class InFileDatabaseTest {
   @BeforeAll
   static void setUp() {
     Address address = new Address("Wall Street", "12/55B", "New York", "12-999");
-    seller1 = new Company(1, "Microsoft", address, "5272830422",
+    Company seller2 = new Company(1, "Microsoft", address, "5272830422",
         "11114015601081110181488249");
-    seller2 = new Company(2, "Bush", address, "5272830422", "11114015601081110181488249");
-    buyer1 = new Company(41, "Netflix", address, "6570011469", "11114015601081110181488249");
-    buyer2 = new Company(43, "Apple", address, "6570011469", "11114015601081110181488249");
+    seller1 = new Company(2, "Bush", address, "5272830422", "11114015601081110181488249");
+    Company buyer2 = new Company(41, "Netflix", address, "6570011469",
+        "11114015601081110181488249");
+    buyer1 = new Company(43, "Apple", address, "6570011469", "11114015601081110181488249");
     InvoiceEntry invoiceEntry1 = new InvoiceEntry(10, "Lego", "piece", new BigDecimal(199.99),
         Vat.RATE_23,
         new BigDecimal(199.99), new BigDecimal(500));
@@ -82,15 +83,13 @@ class InFileDatabaseTest {
         new BigDecimal(99), new BigDecimal(12));
     List<InvoiceEntry> invoiceEntries = new ArrayList<>(
         Arrays.asList(invoiceEntry1, invoiceEntry2, invoiceEntry3));
-    LocalDate weekAgo = LocalDate.now().minusDays(7);
-    invoice1 = new Invoice(null, weekAgo, invoiceEntries, "FA/111/2018", seller1, buyer1);
-    invoice2 = new Invoice(5L, weekAgo, invoiceEntries, "FA/111/2018", seller1, buyer1);
-    LocalDate fourDaysAgo = LocalDate.now().minusDays(4);
-    invoice3 = new Invoice(1L, fourDaysAgo, invoiceEntries, "FA/333/2018", seller2, buyer1);
-    LocalDate yesterday = LocalDate.now().minusDays(1);
-    invoice4 = new Invoice(2L, weekAgo, invoiceEntries, "FA/444/2018", seller2, buyer2);
-    LocalDate today = LocalDate.now();
-    invoice5 = new Invoice(128L, yesterday, invoiceEntries, "FA/444/2018", seller2, buyer2);
+    LocalDate weekBefore = referenceDate.minusDays(7);
+    invoice1 = new Invoice(null, weekBefore, invoiceEntries, "FA/111/2018", seller2, buyer2);
+    invoice2 = new Invoice(5L, weekBefore, invoiceEntries, "FA/111/2018", seller2, buyer2);
+    LocalDate fourDaysBefore = referenceDate.minusDays(4);
+    invoice3 = new Invoice(1L, fourDaysBefore, invoiceEntries, "FA/333/2018", seller1, buyer2);
+    invoice4 = new Invoice(2L, weekBefore, invoiceEntries, "FA/444/2018", seller1, buyer1);
+    invoice5 = new Invoice(128L, weekBefore, invoiceEntries, "FA/444/2018", seller1, buyer1);
     allInvoices
         = new ArrayList<>(Arrays.asList(invoice2, invoice3, invoice4));
   }
@@ -132,7 +131,7 @@ class InFileDatabaseTest {
   void findByBuyerTest() throws DatabaseOperationException, IOException {
     when(fileProcessorMock.getLines()).thenReturn(jsonsListMock);
     when(jsonConverterMock.convert(jsonsListMock)).thenReturn(allInvoices);
-    ArrayList<Invoice> byBuyer2 = (ArrayList<Invoice>) inFileDatabase.findByBuyer(buyer2);
+    ArrayList<Invoice> byBuyer2 = (ArrayList<Invoice>) inFileDatabase.findByBuyer(buyer1);
     assertEquals(1, byBuyer2.size());
     assertTrue(
         byBuyer2.contains(invoice4));
@@ -145,7 +144,7 @@ class InFileDatabaseTest {
   void findBySellerTest() throws DatabaseOperationException, IOException {
     when(fileProcessorMock.getLines()).thenReturn(jsonsListMock);
     when(jsonConverterMock.convert(jsonsListMock)).thenReturn(allInvoices);
-    ArrayList<Invoice> bySeller2 = (ArrayList<Invoice>) inFileDatabase.findBySeller(seller2);
+    ArrayList<Invoice> bySeller2 = (ArrayList<Invoice>) inFileDatabase.findBySeller(seller1);
     assertEquals(2, bySeller2.size());
     assertTrue(
         bySeller2.contains(invoice3) && bySeller2.contains(invoice4));
@@ -159,9 +158,9 @@ class InFileDatabaseTest {
     when(fileProcessorMock.getLines()).thenReturn(jsonsListMock);
     when(jsonConverterMock.convert(jsonsListMock)).thenReturn(allInvoices);
     Collection<Invoice> actual1 = inFileDatabase
-        .findByDate(LocalDate.now().minusDays(4), LocalDate.now());
+        .findByDate(referenceDate.minusDays(4), LocalDate.now());
     Collection<Invoice> actual2 = inFileDatabase
-        .findByDate(LocalDate.now().minusDays(10), LocalDate.now().minusDays(6));
+        .findByDate(referenceDate.minusDays(10), referenceDate.minusDays(6));
     assertEquals(1, actual1.size());
     assertEquals(2, actual2.size());
     verify(fileProcessorMock, never()).addLine(any());

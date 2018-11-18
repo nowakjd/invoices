@@ -9,6 +9,7 @@ import pl.coderstrust.model.Invoice;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class JsonConverter {
 
@@ -27,8 +28,8 @@ public class JsonConverter {
     return objectMapper.readValue(line, Invoice.class);
   }
 
-  public ArrayList<Invoice> convert(ArrayList<String> lines) throws IOException {
-    ArrayList<Invoice> result = new ArrayList<>();
+  public List<Invoice> convert(List<String> lines) throws IOException {
+    List<Invoice> result = new ArrayList<>();
     for (String line : lines) {
       result.add(convert(line));
     }
