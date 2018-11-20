@@ -28,6 +28,9 @@ public class InFileDatabase implements Database {
 
   @Override
   public Invoice save(Invoice invoice) throws DatabaseOperationException {
+    if (invoice == null) {
+      throw new IllegalArgumentException("Failed to save. Invoice should not be null");
+    }
     final Long id = invoice.getId();
     try {
       if (id == null) {
