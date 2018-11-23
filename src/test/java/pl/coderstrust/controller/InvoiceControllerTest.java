@@ -60,7 +60,7 @@ class InvoiceControllerTest {
     invoice1 = new Invoice(1, LocalDate.of(2018, 9, 1),
         new ArrayList<>(), "FA/333/2018", null, null);
     invoice2 = new Invoice(2, LocalDate.of(2018, 10, 1),
-        new ArrayList<>(), "FA/333/2018", null, null);
+        new ArrayList<>(), "FA/444/2018", null, null);
     invoiceList = Arrays.asList(invoice1, invoice2);
   }
 
@@ -73,7 +73,10 @@ class InvoiceControllerTest {
         .perform(post("/invoices")
             .contentType(MediaType.APPLICATION_JSON_UTF8)
             .content(toJson(invoice1)))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.id", is(1)))
+        .andExpect(jsonPath("$.issueDate", is("2018-09-01")))
+        .andExpect(jsonPath("$.issue", is("FA/333/2018")));
 
     then(invoiceService).should().save(invoice1);
   }
@@ -86,7 +89,13 @@ class InvoiceControllerTest {
     mockMvc
         .perform(get("/invoices"))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$", hasSize(2)));
+        .andExpect(jsonPath("$", hasSize(2)))
+        .andExpect(jsonPath("$[0].id", is(1)))
+        .andExpect(jsonPath("$[0].issueDate", is("2018-09-01")))
+        .andExpect(jsonPath("$[0].issue", is("FA/333/2018")))
+        .andExpect(jsonPath("$[1].id", is(2)))
+        .andExpect(jsonPath("$[1].issueDate", is("2018-10-01")))
+        .andExpect(jsonPath("$[1].issue", is("FA/444/2018")));
 
     then(invoiceService).should().findAll();
   }
@@ -109,15 +118,15 @@ class InvoiceControllerTest {
   @DisplayName("Checking the findByDate method call")
   void getFindByDateTest() throws Exception {
     given(invoiceService.findByDate(LocalDate.of(2018, 9, 1),
-        LocalDate.of(2018, 11, 30))).willReturn(invoiceList);
+        LocalDate.of(2018, 10, 30))).willReturn(invoiceList);
 
     mockMvc
-        .perform(get("/invoices/byDate?fromDate=2018-09-01&toDate=2018-11-30"))
+        .perform(get("/invoices/byDate?fromDate=2018-09-01&toDate=2018-10-30"))
         .andExpect(status().isOk());
 
     then(invoiceService).should()
         .findByDate(LocalDate.of(2018, 9, 1),
-            LocalDate.of(2018, 11, 30));
+            LocalDate.of(2018, 10, 30));
   }
 
   @Test
