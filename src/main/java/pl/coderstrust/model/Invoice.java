@@ -6,12 +6,15 @@ import java.util.List;
 
 public class Invoice {
 
-  private final long id;
-  private final LocalDate issueDate;
-  private final List<InvoiceEntry> entries;
-  private final String issue;
-  private final Company seller;
-  private final Company buyer;
+  private long id;
+  private LocalDate issueDate;
+  private List<InvoiceEntry> entries;
+  private String issue;
+  private Company seller;
+  private Company buyer;
+
+  public Invoice() {
+  }
 
   public Invoice(long id, LocalDate issueDate, List<InvoiceEntry> entries, String issue,
       Company seller, Company buyer) {
@@ -51,5 +54,34 @@ public class Invoice {
 
   public Company getBuyer() {
     return buyer;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (obj == null || getClass() != obj.getClass()) {
+      return false;
+    }
+
+    Invoice invoice = (Invoice) obj;
+
+    if (id != invoice.id) {
+      return false;
+    }
+    if (issueDate != null ? !issueDate.equals(invoice.issueDate) : invoice.issueDate != null) {
+      return false;
+    }
+    if (entries != null ? !entries.equals(invoice.entries) : invoice.entries != null) {
+      return false;
+    }
+    if (issue != null ? !issue.equals(invoice.issue) : invoice.issue != null) {
+      return false;
+    }
+    if (seller != null ? !seller.equals(invoice.seller) : invoice.seller != null) {
+      return false;
+    }
+    return buyer != null ? buyer.equals(invoice.buyer) : invoice.buyer == null;
   }
 }
