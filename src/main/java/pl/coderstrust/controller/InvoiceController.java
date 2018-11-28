@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import pl.coderstrust.database.DatabaseOperationException;
-import pl.coderstrust.model.Company;
 import pl.coderstrust.model.Invoice;
 import pl.coderstrust.service.InvoiceService;
 
@@ -44,14 +43,14 @@ public class InvoiceController {
     return invoiceService.findAll();
   }
 
-  Collection<Invoice> findByBuyer(Company company)
+  Collection<Invoice> findByBuyer(Long companyId)
       throws DatabaseOperationException {
-    return invoiceService.findByBuyer(company);
+    return invoiceService.findByBuyer(companyId);
   }
 
-  Collection<Invoice> findBySeller(Company company)
+  Collection<Invoice> findBySeller(Long companyId)
       throws DatabaseOperationException {
-    return invoiceService.findBySeller(company);
+    return invoiceService.findBySeller(companyId);
   }
 
   @GetMapping("/byDate")

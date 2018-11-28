@@ -16,7 +16,7 @@ import java.util.List;
 
 class InvoiceTest {
 
-  private static final long ID = 1;
+  private static final Long ID = 1L;
   private static final LocalDate ISSUE_DATE = LocalDate.of(2018, 10, 1);
   private static final List<InvoiceEntry> ENTRIES = null;
   private static final String ISSUE = "2018/01/1234567";
@@ -42,9 +42,7 @@ class InvoiceTest {
   @ValueSource(longs = {-1, 0})
   void invalidValueOfIdTest(long id) {
     IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-        () -> {
-          new Invoice(id, ISSUE_DATE, ENTRIES, ISSUE, SELLER, BUYER);
-        });
+        () -> new Invoice(id, ISSUE_DATE, ENTRIES, ISSUE, SELLER, BUYER));
     assertEquals("The id should be greater than zero", exception.getMessage());
   }
 
@@ -52,10 +50,8 @@ class InvoiceTest {
   @DisplayName("Checking date out of range")
   void testInvalidDate() {
     IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-        () -> {
-          new Invoice(ID, LocalDate.of(2018, 12, 10), ENTRIES, ISSUE, SELLER,
-              BUYER);
-        });
+        () -> new Invoice(ID, LocalDate.of(2018, 12, 10), ENTRIES, ISSUE, SELLER,
+            BUYER));
     assertEquals("Passing date cannot be in the future", exception.getMessage());
   }
 }

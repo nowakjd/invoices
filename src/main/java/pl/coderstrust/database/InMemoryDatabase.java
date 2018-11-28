@@ -1,7 +1,6 @@
 package pl.coderstrust.database;
 
 import org.springframework.stereotype.Repository;
-import pl.coderstrust.model.Company;
 import pl.coderstrust.model.Invoice;
 
 import java.time.LocalDate;
@@ -26,12 +25,12 @@ public class InMemoryDatabase implements Database {
   }
 
   @Override
-  public Collection<Invoice> findByBuyer(Company company) throws DatabaseOperationException {
+  public Collection<Invoice> findByBuyer(Long companyId) throws DatabaseOperationException {
     return null;
   }
 
   @Override
-  public Collection<Invoice> findBySeller(Company company) throws DatabaseOperationException {
+  public Collection<Invoice> findBySeller(Long companyId) throws DatabaseOperationException {
     return null;
   }
 

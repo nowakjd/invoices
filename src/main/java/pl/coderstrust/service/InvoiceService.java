@@ -3,7 +3,6 @@ package pl.coderstrust.service;
 import org.springframework.stereotype.Service;
 import pl.coderstrust.database.Database;
 import pl.coderstrust.database.DatabaseOperationException;
-import pl.coderstrust.model.Company;
 import pl.coderstrust.model.Invoice;
 
 import java.time.LocalDate;
@@ -14,7 +13,7 @@ public class InvoiceService {
 
   private Database database;
 
-  public InvoiceService(Database database) {
+  InvoiceService(Database database) {
     this.database = database;
   }
 
@@ -30,12 +29,12 @@ public class InvoiceService {
     return database.findAll();
   }
 
-  public Collection<Invoice> findByBuyer(Company company) throws DatabaseOperationException {
-    return database.findByBuyer(company);
+  public Collection<Invoice> findByBuyer(Long companyId) throws DatabaseOperationException {
+    return database.findByBuyer(companyId);
   }
 
-  public Collection<Invoice> findBySeller(Company company) throws DatabaseOperationException {
-    return database.findBySeller(company);
+  public Collection<Invoice> findBySeller(Long companyId) throws DatabaseOperationException {
+    return database.findBySeller(companyId);
   }
 
   public Collection<Invoice> findByDate(LocalDate fromDate, LocalDate toDate)

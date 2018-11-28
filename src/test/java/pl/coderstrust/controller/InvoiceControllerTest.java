@@ -54,9 +54,9 @@ class InvoiceControllerTest {
 
   @BeforeAll
   void setUp() {
-    invoice1 = new Invoice(1, LocalDate.of(2018, 9, 1),
+    invoice1 = new Invoice(1L, LocalDate.of(2018, 9, 1),
         new ArrayList<>(), "FA/333/2018", null, null);
-    invoice2 = new Invoice(2, LocalDate.of(2018, 10, 1),
+    invoice2 = new Invoice(2L, LocalDate.of(2018, 10, 1),
         new ArrayList<>(), "FA/444/2018", null, null);
     invoiceList = Arrays.asList(invoice1, invoice2);
   }

@@ -29,7 +29,7 @@ class StringValidatorTest {
   @ValueSource(strings = {"95 1140 2004 0000 3602 7660 2007", "54114020040000340277983541",
       "42 10901304 000000013142 0368"})
   void checkSetValidNrbNumber(String accountNrbNumber) {
-    Company company = new Company(125, "Foo", address, "65-70-082-357", accountNrbNumber);
+    Company company = new Company(125L, "Foo", address, "65-70-082-357", accountNrbNumber);
     assertEquals(accountNrbNumber, company.getAccountNumber());
   }
 
@@ -39,14 +39,14 @@ class StringValidatorTest {
       "95_1140 2004 0000 3602 7660 2007", "PL95 1140 2004 0000 3602 7660 2007"})
   void checkSetInvalidNrbNumber(String accountNrbNumber) {
     assertThrows(PatternSyntaxException.class,
-        () -> new Company(125, "Foo", address, "65-70-082-357", accountNrbNumber));
+        () -> new Company(125L, "Foo", address, "65-70-082-357", accountNrbNumber));
   }
 
   @ParameterizedTest
   @DisplayName("Checking valid syntax of tax identification number.")
   @ValueSource(strings = {"6570011469", "65-70-082-357", "526 103 77 37", "52 52 081 555"})
   void checkSetValidNipNumber(String taxIdentyficationNumber) {
-    Company company = new Company(125, "Foo", address, taxIdentyficationNumber,
+    Company company = new Company(125L, "Foo", address, taxIdentyficationNumber,
         "95 1140 2004 0000 3602 7660 2007");
     assertEquals(taxIdentyficationNumber, company.getTaxIdentificationNumber());
   }
@@ -56,7 +56,7 @@ class StringValidatorTest {
   @ValueSource(strings = {"", "1235454", "2018", "text", "6570011460", "qwertyuiop"})
   void checkSetInvalidNipNumber(String taxIdentyficationNumber) {
     assertThrows(PatternSyntaxException.class,
-        () -> new Company(125, "Foo", address, taxIdentyficationNumber,
+        () -> new Company(125L, "Foo", address, taxIdentyficationNumber,
             "95 1140 2004 0000 3602 7660 2007"));
   }
 
@@ -79,7 +79,7 @@ class StringValidatorTest {
   @DisplayName("Checking string getters and setters.")
   @ValueSource(strings = {"", "1235454", "2018", "text", "6570011460"})
   void checkStringGettersAndSetters(String strings) {
-    Company company = new Company(111, strings, address, "65 - 70 - 082 - 357",
+    Company company = new Company(111L, strings, address, "65 - 70 - 082 - 357",
         "54114020040000340277983541");
     Address address = new Address(strings, strings, strings, "02-066");
     assertAll(
@@ -92,8 +92,8 @@ class StringValidatorTest {
 
   @ParameterizedTest
   @DisplayName("Checking integer getters and setters.")
-  @ValueSource(ints = {12, 5689, 55, 666, 2018, 41258369, 22548899, 739010203})
-  void checkIntegerGettersAndSetters(int number) {
+  @ValueSource(longs = {12, 5689, 55, 666, 2018, 41258369, 22548899, 739010203})
+  void checkIntegerGettersAndSetters(Long number) {
     Company company = new Company(number, "Zus", address, "65 - 70 - 082 - 357",
         "54114020040000340277983541");
     assertAll(() -> assertEquals(number, company.getCompanyId()));
@@ -102,7 +102,7 @@ class StringValidatorTest {
   @Test
   @DisplayName("Checking integer getters and setters.")
   void checkAddressGetterAndSetter() {
-    Company company = new Company(123, "Zus", address, "65 - 70 - 082 - 357",
+    Company company = new Company(123L, "Zus", address, "65 - 70 - 082 - 357",
         "54114020040000340277983541");
     Address address2 = new Address("Wiejska", "12B/4", "Warszawa", "00-002");
     assertNotEquals(address2, company.getAddress());

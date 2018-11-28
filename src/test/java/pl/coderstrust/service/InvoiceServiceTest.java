@@ -11,7 +11,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import pl.coderstrust.database.Database;
 import pl.coderstrust.database.DatabaseOperationException;
-import pl.coderstrust.model.Company;
 import pl.coderstrust.model.Invoice;
 
 import java.time.LocalDate;
@@ -19,7 +18,6 @@ import java.time.LocalDate;
 @ExtendWith(MockitoExtension.class)
 class InvoiceServiceTest {
   
-  private static Company company;
   private static LocalDate fromDate;
   private static LocalDate toDate;
   private InvoiceService invoiceService;
@@ -32,8 +30,6 @@ class InvoiceServiceTest {
 
   @BeforeAll
   static void beforeAll() {
-    company = new Company(1, "Kogucik", null,
-        "6570011469", "54114020040000340277983541");
     fromDate = LocalDate.of(2018, 10, 1);
     toDate = LocalDate.of(2018, 10, 31);
   }
@@ -67,15 +63,15 @@ class InvoiceServiceTest {
   @Test
   @DisplayName("Checking the findByBuyer method call")
   void findByBuyerMethodTest() throws DatabaseOperationException {
-    invoiceService.findByBuyer(company);
-    verify(database).findByBuyer(company);
+    invoiceService.findByBuyer(1L);
+    verify(database).findByBuyer(1L);
   }
 
   @Test
   @DisplayName("Checking the findBySeller method call")
   void findBySellerMethodTest() throws DatabaseOperationException {
-    invoiceService.findBySeller(company);
-    verify(database).findBySeller(company);
+    invoiceService.findBySeller(1L);
+    verify(database).findBySeller(1L);
   }
 
   @Test

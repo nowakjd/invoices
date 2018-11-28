@@ -1,6 +1,5 @@
 package pl.coderstrust.database;
 
-import pl.coderstrust.model.Company;
 import pl.coderstrust.model.Invoice;
 
 import java.time.LocalDate;
@@ -14,9 +13,9 @@ public interface Database {
 
   Collection<Invoice> findAll() throws DatabaseOperationException;
 
-  Collection<Invoice> findByBuyer(Company company) throws DatabaseOperationException;
+  Collection<Invoice> findByBuyer(Long companyId) throws DatabaseOperationException;
 
-  Collection<Invoice> findBySeller(Company company) throws DatabaseOperationException;
+  Collection<Invoice> findBySeller(Long companyId) throws DatabaseOperationException;
 
   Collection<Invoice> findByDate(LocalDate fromDate, LocalDate toDate)
       throws DatabaseOperationException;

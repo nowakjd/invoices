@@ -4,13 +4,13 @@ import pl.coderstrust.service.StringValidator;
 
 public class Company {
 
-  private final int companyId;
+  private final Long companyId;
   private final String companyName;
   private final Address address;
   private final String taxIdentificationNumber;
   private final String accountNumber;
 
-  public Company(int companyId, String companyName, Address address,
+  public Company(Long companyId, String companyName, Address address,
       String taxIdentificationNumber, String accountNumber) {
     this.companyId = companyId;
     this.companyName = companyName;
@@ -21,7 +21,7 @@ public class Company {
     this.accountNumber = accountNumber;
   }
 
-  int getCompanyId() {
+  Long getCompanyId() {
     return companyId;
   }
 

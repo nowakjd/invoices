@@ -1,23 +1,29 @@
 package pl.coderstrust.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Invoice {
 
-  private long id;
-  private LocalDate issueDate;
-  private List<InvoiceEntry> entries;
-  private String issue;
-  private Company seller;
-  private Company buyer;
+  private final Long id;
+  private final LocalDate issueDate;
+  private final List<InvoiceEntry> entries;
+  private final String issue;
+  private final Company seller;
+  private final Company buyer;
 
-  public Invoice() {
-  }
-
-  public Invoice(long id, LocalDate issueDate, List<InvoiceEntry> entries, String issue,
-      Company seller, Company buyer) {
+  @JsonCreator
+  public Invoice(
+      @JsonProperty("id") Long id,
+      @JsonProperty("issueDate") LocalDate issueDate,
+      @JsonProperty("entries") List<InvoiceEntry> entries,
+      @JsonProperty("issue") String issue,
+      @JsonProperty("seller") Company seller,
+      @JsonProperty("buyer") Company buyer) {
     if (id <= 0) {
       throw new IllegalArgumentException("The id should be greater than zero");
     }
@@ -32,7 +38,7 @@ public class Invoice {
     this.buyer = buyer;
   }
 
-  public long getId() {
+  public Long getId() {
     return id;
   }
 
@@ -67,7 +73,7 @@ public class Invoice {
 
     Invoice invoice = (Invoice) obj;
 
-    if (id != invoice.id) {
+    if (id != null ? !id.equals(invoice.id) : invoice.id != null) {
       return false;
     }
     if (issueDate != null ? !issueDate.equals(invoice.issueDate) : invoice.issueDate != null) {
