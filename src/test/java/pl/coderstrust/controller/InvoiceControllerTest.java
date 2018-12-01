@@ -28,12 +28,14 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import pl.coderstrust.model.Company;
 import pl.coderstrust.model.Invoice;
 import pl.coderstrust.service.InvoiceService;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @ExtendWith(SpringExtension.class)
@@ -48,17 +50,27 @@ class InvoiceControllerTest {
   @MockBean
   private InvoiceService invoiceService;
 
+  private Company buyer;
+  private Company seller;
   private Invoice invoice1;
   private Invoice invoice2;
   private List<Invoice> invoiceList;
+  private List<Invoice> invoiceListByCompany;
+
 
   @BeforeAll
   void setUp() {
+    buyer = new Company(41L, "Netflix", null,
+        "6570011469", "11114015601081110181488249");
+    seller = new Company(1L, "Microsoft", null, "5272830422",
+        "11114015601081110181488249");
     invoice1 = new Invoice(1L, LocalDate.of(2018, 9, 1),
-        new ArrayList<>(), "FA/333/2018", null, null);
+        new ArrayList<>(), "FA/333/2018", seller, buyer);
     invoice2 = new Invoice(2L, LocalDate.of(2018, 10, 1),
-        new ArrayList<>(), "FA/444/2018", null, null);
+        new ArrayList<>(), "FA/444/2018", seller, buyer);
     invoiceList = Arrays.asList(invoice1, invoice2);
+    invoiceListByCompany = Collections.singletonList(invoice1);
+
   }
 
   @Test
@@ -73,7 +85,15 @@ class InvoiceControllerTest {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.id", is(1)))
         .andExpect(jsonPath("$.issueDate", is("2018-09-01")))
-        .andExpect(jsonPath("$.issue", is("FA/333/2018")));
+        .andExpect(jsonPath("$.issue", is("FA/333/2018")))
+        .andExpect(jsonPath("$.buyer.companyId", is(41)))
+        .andExpect(jsonPath("$.buyer.companyName", is("Netflix")))
+        .andExpect(jsonPath("$.buyer.taxIdentificationNumber", is("6570011469")))
+        .andExpect(jsonPath("$.buyer.accountNumber", is("11114015601081110181488249")))
+        .andExpect(jsonPath("$.seller.companyId", is(1)))
+        .andExpect(jsonPath("$.seller.companyName", is("Microsoft")))
+        .andExpect(jsonPath("$.seller.taxIdentificationNumber", is("5272830422")))
+        .andExpect(jsonPath("$.seller.accountNumber", is("11114015601081110181488249")));
 
     then(invoiceService).should().save(invoice1);
   }
@@ -124,6 +144,38 @@ class InvoiceControllerTest {
     then(invoiceService).should()
         .findByDate(LocalDate.of(2018, 9, 1),
             LocalDate.of(2018, 10, 30));
+  }
+
+  @Test
+  @DisplayName("Checking the findByBuyer method call")
+  void getFindByBuyer() throws Exception {
+    given(invoiceService.findByBuyer(41L)).willReturn(invoiceListByCompany);
+
+    mockMvc
+        .perform(get("/invoices/buyer/{companyId}", 41L))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$[0].buyer.companyId", is(41)))
+        .andExpect(jsonPath("$[0].buyer.companyName", is("Netflix")))
+        .andExpect(jsonPath("$[0].buyer.taxIdentificationNumber", is("6570011469")))
+        .andExpect(jsonPath("$[0].buyer.accountNumber", is("11114015601081110181488249")));
+
+    then(invoiceService).should().findByBuyer(41L);
+  }
+
+  @Test
+  @DisplayName("Checking the findBySeller method call")
+  void getBySeller() throws Exception {
+    given(invoiceService.findBySeller(1L)).willReturn(invoiceListByCompany);
+
+    mockMvc
+        .perform(get("/invoices/seller/{companyId}", 1L))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$[0].seller.companyId", is(1)))
+        .andExpect(jsonPath("$[0].seller.companyName", is("Microsoft")))
+        .andExpect(jsonPath("$[0].seller.taxIdentificationNumber", is("5272830422")))
+        .andExpect(jsonPath("$[0].seller.accountNumber", is("11114015601081110181488249")));
+
+    then(invoiceService).should().findBySeller(1L);
   }
 
   @Test
