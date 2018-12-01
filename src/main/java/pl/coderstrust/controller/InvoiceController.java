@@ -43,7 +43,7 @@ public class InvoiceController {
     return invoiceService.findAll();
   }
 
-  @GetMapping("/buyer/{companyId")
+  @GetMapping("/buyer/{companyId}")
   Collection<Invoice> findByBuyer(@PathVariable Long companyId)
       throws DatabaseOperationException {
     return invoiceService.findByBuyer(companyId);
