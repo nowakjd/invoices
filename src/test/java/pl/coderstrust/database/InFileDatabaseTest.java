@@ -67,12 +67,12 @@ class InFileDatabaseTest {
   @BeforeAll
   static void setUp() {
     Address address = new Address("Wall Street", "12/55B", "New York", "12-999");
-    Company seller2 = new Company(1, "Microsoft", address, "5272830422",
+    Company seller2 = new Company(1L, "Microsoft", address, "5272830422",
         "11114015601081110181488249");
-    seller1 = new Company(2, "Bush", address, "5272830422", "11114015601081110181488249");
-    Company buyer2 = new Company(41, "Netflix", address, "6570011469",
+    seller1 = new Company(2L, "Bush", address, "5272830422", "11114015601081110181488249");
+    Company buyer2 = new Company(41L, "Netflix", address, "6570011469",
         "11114015601081110181488249");
-    buyer1 = new Company(43, "Apple", address, "6570011469", "11114015601081110181488249");
+    buyer1 = new Company(43L, "Apple", address, "6570011469", "11114015601081110181488249");
     InvoiceEntry invoiceEntry1 = new InvoiceEntry(10, "Lego", "piece", new BigDecimal(199.99),
         Vat.RATE_23,
         new BigDecimal(199.99), new BigDecimal(500));
@@ -131,7 +131,8 @@ class InFileDatabaseTest {
   void findByBuyerTest() throws DatabaseOperationException, IOException {
     when(fileProcessorMock.getLines()).thenReturn(jsonsListMock);
     when(jsonConverterMock.convert(jsonsListMock)).thenReturn(allInvoices);
-    ArrayList<Invoice> byBuyer2 = (ArrayList<Invoice>) inFileDatabase.findByBuyer(buyer1);
+    ArrayList<Invoice> byBuyer2 = (ArrayList<Invoice>) inFileDatabase
+        .findByBuyer(buyer1.getCompanyId());
     assertEquals(1, byBuyer2.size());
     assertTrue(
         byBuyer2.contains(invoice4));
@@ -144,7 +145,8 @@ class InFileDatabaseTest {
   void findBySellerTest() throws DatabaseOperationException, IOException {
     when(fileProcessorMock.getLines()).thenReturn(jsonsListMock);
     when(jsonConverterMock.convert(jsonsListMock)).thenReturn(allInvoices);
-    ArrayList<Invoice> bySeller2 = (ArrayList<Invoice>) inFileDatabase.findBySeller(seller1);
+    ArrayList<Invoice> bySeller2 = (ArrayList<Invoice>) inFileDatabase
+        .findBySeller(seller1.getCompanyId());
     assertEquals(2, bySeller2.size());
     assertTrue(
         bySeller2.contains(invoice3) && bySeller2.contains(invoice4));

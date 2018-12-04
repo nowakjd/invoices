@@ -71,15 +71,17 @@ public class InFileDatabase implements Database {
   }
 
   @Override
-  public Collection<Invoice> findByBuyer(Company company) throws DatabaseOperationException {
+  public Collection<Invoice> findByBuyer(Long companyId) throws DatabaseOperationException {
     return findAll().stream()
-        .filter(invoice -> company.equals(invoice.getBuyer())).collect(Collectors.toList());
+        .filter(invoice -> companyId.equals(invoice.getBuyer().getCompanyId()))
+        .collect(Collectors.toList());
   }
 
   @Override
-  public Collection<Invoice> findBySeller(Company company) throws DatabaseOperationException {
+  public Collection<Invoice> findBySeller(Long companyId) throws DatabaseOperationException {
     return findAll().stream()
-        .filter(invoice -> company.equals(invoice.getSeller())).collect(Collectors.toList());
+        .filter(invoice -> companyId.equals(invoice.getSeller().getCompanyId()))
+        .collect(Collectors.toList());
   }
 
   @Override
