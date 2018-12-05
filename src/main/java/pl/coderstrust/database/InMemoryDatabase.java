@@ -8,6 +8,7 @@ import pl.coderstrust.model.InvoiceEntry;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -19,6 +20,7 @@ public class InMemoryDatabase implements Database {
   private Long newId = 1L;
 
   public InMemoryDatabase() {
+    invoicesStorage = new HashMap<>();
   }
 
   InMemoryDatabase(Map<Long, Invoice> invoicesStorage) {
