@@ -24,7 +24,7 @@ public class Invoice {
       @JsonProperty("issue") String issue,
       @JsonProperty("seller") Company seller,
       @JsonProperty("buyer") Company buyer) {
-    if (id <= 0) {
+    if ((id != null) && (id <= 0)) {
       throw new IllegalArgumentException("The id should be greater than zero");
     }
     if (issueDate.isAfter(LocalDate.now())) {

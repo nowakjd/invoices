@@ -11,7 +11,7 @@ public class Address {
   private final String city;
   private final String zipCode;
 
-  Address(String street, String number, String city, String zipCode) {
+  public Address(String street, String number, String city, String zipCode) {
     StringValidator.validateZipCode(zipCode);
     this.zipCode = zipCode;
     this.street = street;
