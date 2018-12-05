@@ -57,8 +57,7 @@ public class InMemoryDatabase implements Database {
     final Company seller = invoice.getSeller();
     final Company buyer = invoice.getBuyer();
     result = new Invoice(newId, issueDate, entries, issue, seller, buyer);
-    invoicesStorage.put(newId, result);
-    newId++;
+    invoicesStorage.put(newId++, result);
     return result;
   }
 
