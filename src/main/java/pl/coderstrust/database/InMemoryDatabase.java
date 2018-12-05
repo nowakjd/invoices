@@ -97,10 +97,18 @@ public class InMemoryDatabase implements Database {
   @Override
   public Collection<Invoice> findByDate(LocalDate fromDate, LocalDate toDate) {
     return invoicesStorage.values().stream()
-        .filter(invoice -> (fromDate.isBefore(invoice.getIssueDate())
-            && toDate.isAfter(invoice.getIssueDate())) || fromDate.isEqual(invoice.getIssueDate())
-            || toDate.isEqual(invoice.getIssueDate()))
-        .collect(Collectors.toList());
+        .filter(invoice -> (isValidDate(invoice, fromDate, toDate))).collect(Collectors.toList());
+  }
+
+  private boolean isValidDate(Invoice invoice, LocalDate fromDate, LocalDate toDate) {
+    if (toDate.isEqual(invoice.getIssueDate())) {
+      return true;
+    }
+    if (fromDate.isEqual(invoice.getIssueDate())) {
+      return true;
+    }
+    return
+        fromDate.isBefore(invoice.getIssueDate()) && toDate.isAfter(invoice.getIssueDate());
   }
 
   @Override
