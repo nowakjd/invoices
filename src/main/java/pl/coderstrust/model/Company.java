@@ -2,14 +2,23 @@ package pl.coderstrust.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import pl.coderstrust.service.StringValidator;
 
+@ApiModel(value = "CompanyModel", description = "Sample company model")
 public class Company {
 
+  @ApiModelProperty(value = "The id of company in the database", example = "1")
   private final Long companyId;
+  @ApiModelProperty(value = "The name of company", example = "Longnet")
   private final String companyName;
+  @ApiModelProperty(value = "The address of company's headquarter")
   private final Address address;
+  @ApiModelProperty(value = "The id number used for tax purposes", example = "5272830422")
   private final String taxIdentificationNumber;
+  @ApiModelProperty(value = "The number of bank's account",
+      example = "11 1140 1560 1081 1101 8148 8249")
   private final String accountNumber;
 
   @JsonCreator

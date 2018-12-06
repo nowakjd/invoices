@@ -2,15 +2,22 @@ package pl.coderstrust.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import pl.coderstrust.service.StringValidator;
 
 import java.util.Objects;
 
+@ApiModel(value = "AddressModel", description = "Sample address model")
 public class Address {
 
+  @ApiModelProperty(value = "The street where company is located", example = "Wall Street")
   private final String street;
+  @ApiModelProperty(value = "The number of building", example = "12B/134")
   private final String number;
+  @ApiModelProperty(value = "The city of company's headquarters", example = "New York")
   private final String city;
+  @ApiModelProperty(value = "The postal code of city", example = "12-999")
   private final String zipCode;
 
   @JsonCreator
