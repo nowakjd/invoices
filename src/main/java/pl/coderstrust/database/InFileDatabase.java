@@ -15,11 +15,11 @@ import java.util.stream.Collectors;
 
 public class InFileDatabase implements Database {
 
-  private IdGenerator idGenerator;
-  private FileProcessor fileProcessor;
-  private JsonConverter jsonConverter;
+  private final IdGenerator idGenerator;
+  private final FileProcessor fileProcessor;
+  private final JsonConverter jsonConverter;
 
-  public InFileDatabase(FileProcessor fileProcessor, IdGenerator idGenerator,
+  InFileDatabase(FileProcessor fileProcessor, IdGenerator idGenerator,
       JsonConverter jsonConverter) {
     this.fileProcessor = fileProcessor;
     this.idGenerator = idGenerator;
@@ -43,8 +43,7 @@ public class InFileDatabase implements Database {
         fileProcessor.addLine(jsonConverter.convert(invoice));
       }
     } catch (JsonProcessingException exception) {
-      exception.printStackTrace();
-      throw new DatabaseOperationException("error during json converting");
+      throw new DatabaseOperationException("Error during json converting", exception);
     }
     return invoice;
   }
@@ -55,8 +54,7 @@ public class InFileDatabase implements Database {
     try {
       fileProcessor.removeLine(jsonConverter.convert(toDelete));
     } catch (JsonProcessingException exception) {
-      exception.printStackTrace();
-      throw new DatabaseOperationException("error during json converting");
+      throw new DatabaseOperationException("Error during json converting", exception);
     }
   }
 
@@ -65,8 +63,7 @@ public class InFileDatabase implements Database {
     try {
       return jsonConverter.convert(fileProcessor.getLines());
     } catch (IOException exception) {
-      exception.printStackTrace();
-      throw new DatabaseOperationException("IOException");
+      throw new DatabaseOperationException("IOException", exception);
     }
   }
 
@@ -95,9 +92,9 @@ public class InFileDatabase implements Database {
   @Override
   public Invoice findOne(Long id) throws DatabaseOperationException {
     Invoice result;
-    try {
-      result = findAll().stream().filter(invoice -> id.equals(invoice.getId())).findFirst().get();
-    } catch (NoSuchElementException exception) {
+    result = findAll().stream()
+        .filter(invoice -> id.equals(invoice.getId())).findFirst().orElse(null);
+    if (result == null) {
       throw new DatabaseOperationException("Invoice of id: " + id + " does not exist.");
     }
     return result;

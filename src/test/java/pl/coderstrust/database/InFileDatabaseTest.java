@@ -1,5 +1,6 @@
 package pl.coderstrust.database;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -10,6 +11,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.internal.verification.VerificationModeFactory.only;
 
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -52,17 +54,16 @@ class InFileDatabaseTest {
   private static ArrayList<Invoice> allInvoices;
 
   @Mock
-  static FileProcessor fileProcessorMock;
+  private static FileProcessor fileProcessorMock;
 
   @Mock
-  static IdGenerator idGeneratorMock;
+  private static IdGenerator idGeneratorMock;
 
   @Mock
-  static JsonConverter jsonConverterMock;
+  private static JsonConverter jsonConverterMock;
 
   @InjectMocks
-  InFileDatabase inFileDatabase = new InFileDatabase(fileProcessorMock, idGeneratorMock,
-      jsonConverterMock);
+  InFileDatabase inFileDatabase;
 
   @BeforeAll
   static void setUp() {
@@ -122,6 +123,7 @@ class InFileDatabaseTest {
     when(jsonConverterMock.convert(jsonsListMock)).thenReturn(allInvoices);
     Collection<Invoice> all = inFileDatabase.findAll();
     assertEquals(3, all.size());
+    assertThat(all, Matchers.containsInAnyOrder(invoice2, invoice3, invoice4));
     verify(fileProcessorMock, never()).addLine(any());
     verify(fileProcessorMock, never()).removeLine(any());
   }
@@ -134,8 +136,7 @@ class InFileDatabaseTest {
     ArrayList<Invoice> byBuyer2 = (ArrayList<Invoice>) inFileDatabase
         .findByBuyer(buyer1.getCompanyId());
     assertEquals(1, byBuyer2.size());
-    assertTrue(
-        byBuyer2.contains(invoice4));
+    assertTrue(byBuyer2.contains(invoice4));
     verify(fileProcessorMock, never()).addLine(any());
     verify(fileProcessorMock, never()).removeLine(any());
   }
@@ -148,23 +149,32 @@ class InFileDatabaseTest {
     ArrayList<Invoice> bySeller2 = (ArrayList<Invoice>) inFileDatabase
         .findBySeller(seller1.getCompanyId());
     assertEquals(2, bySeller2.size());
-    assertTrue(
-        bySeller2.contains(invoice3) && bySeller2.contains(invoice4));
+    assertThat(bySeller2, Matchers.containsInAnyOrder(invoice3,invoice4));
     verify(fileProcessorMock, never()).addLine(any());
     verify(fileProcessorMock, never()).removeLine(any());
   }
 
   @Test
-  @DisplayName("Find invoices by date")
-  void findByDateTest() throws DatabaseOperationException, IOException {
+  @DisplayName("Find invoices by date, first case")
+  void findByDateTest1() throws DatabaseOperationException, IOException {
     when(fileProcessorMock.getLines()).thenReturn(jsonsListMock);
     when(jsonConverterMock.convert(jsonsListMock)).thenReturn(allInvoices);
-    Collection<Invoice> actual1 = inFileDatabase
+    Collection<Invoice> actual = inFileDatabase
         .findByDate(referenceDate.minusDays(4), LocalDate.now());
-    Collection<Invoice> actual2 = inFileDatabase
+    assertEquals(1, actual.size());
+    verify(fileProcessorMock, never()).addLine(any());
+    verify(fileProcessorMock, never()).removeLine(any());
+  }
+
+  @Test
+  @DisplayName("Find invoices by date, second case")
+  void findByDateTest2() throws DatabaseOperationException, IOException {
+    when(fileProcessorMock.getLines()).thenReturn(jsonsListMock);
+    when(jsonConverterMock.convert(jsonsListMock)).thenReturn(allInvoices);
+    Collection<Invoice> actual = inFileDatabase
         .findByDate(referenceDate.minusDays(10), referenceDate.minusDays(6));
-    assertEquals(1, actual1.size());
-    assertEquals(2, actual2.size());
+    assertEquals(2, actual.size());
+    assertThat(actual, Matchers.containsInAnyOrder(invoice2,invoice4));
     verify(fileProcessorMock, never()).addLine(any());
     verify(fileProcessorMock, never()).removeLine(any());
   }

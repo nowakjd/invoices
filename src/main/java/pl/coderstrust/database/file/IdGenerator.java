@@ -11,9 +11,9 @@ import java.util.Scanner;
 
 public class IdGenerator {
 
-  private String idFileName;
+  private final String idFileName;
 
-  public IdGenerator(String idFileName) throws DatabaseOperationException {
+  IdGenerator(String idFileName) throws DatabaseOperationException {
     this.idFileName = idFileName;
     File file = new File(idFileName);
     try {

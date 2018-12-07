@@ -14,8 +14,11 @@ public class Address {
   private final String zipCode;
 
   @JsonCreator
-  public Address(@JsonProperty("street") String street, @JsonProperty("number") String number,
-      @JsonProperty("city") String city, @JsonProperty("zipCode") String zipCode) {
+  public Address(
+      @JsonProperty("street") String street,
+      @JsonProperty("number") String number,
+      @JsonProperty("city") String city,
+      @JsonProperty("zipCode") String zipCode) {
     StringValidator.validateZipCode(zipCode);
     this.zipCode = zipCode;
     this.street = street;
@@ -23,19 +26,19 @@ public class Address {
     this.city = city;
   }
 
-  public String getStreet() {
+  String getStreet() {
     return street;
   }
 
-  public String getNumber() {
+  String getNumber() {
     return number;
   }
 
-  public String getCity() {
+  String getCity() {
     return city;
   }
 
-  public String getZipCode() {
+  String getZipCode() {
     return zipCode;
   }
 

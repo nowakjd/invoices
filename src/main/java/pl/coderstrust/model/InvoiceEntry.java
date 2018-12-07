@@ -17,9 +17,11 @@ public class InvoiceEntry {
 
   @JsonCreator
   public InvoiceEntry(@JsonProperty("amount") double amount,
-      @JsonProperty("productName") String productName, @JsonProperty("unit") String unit,
+      @JsonProperty("productName") String productName,
+      @JsonProperty("unit") String unit,
       @JsonProperty("price") BigDecimal price,
-      @JsonProperty("vatRate") Vat vatRate, @JsonProperty("netValue") BigDecimal netValue,
+      @JsonProperty("vatRate") Vat vatRate,
+      @JsonProperty("netValue") BigDecimal netValue,
       @JsonProperty("grossValue") BigDecimal grossValue) {
     if (amount <= 0) {
       throw new IllegalArgumentException("The amount must be greater than 0");
@@ -33,31 +35,31 @@ public class InvoiceEntry {
     this.grossValue = grossValue;
   }
 
-  public double getAmount() {
+  double getAmount() {
     return amount;
   }
 
-  public String getProductName() {
+  String getProductName() {
     return productName;
   }
 
-  public String getUnit() {
+  String getUnit() {
     return unit;
   }
 
-  public BigDecimal getPrice() {
+  BigDecimal getPrice() {
     return price;
   }
 
-  public Vat getVatRate() {
+  Vat getVatRate() {
     return vatRate;
   }
 
-  public BigDecimal getNetValue() {
+  BigDecimal getNetValue() {
     return netValue;
   }
 
-  public BigDecimal getGrossValue() {
+  BigDecimal getGrossValue() {
     return grossValue;
   }
 }

@@ -13,7 +13,7 @@ import java.util.List;
 
 public class JsonConverter {
 
-  private ObjectMapper objectMapper = new ObjectMapper();
+  private final ObjectMapper objectMapper = new ObjectMapper();
 
   public JsonConverter() {
     objectMapper.registerModule(new JavaTimeModule());
@@ -35,5 +35,4 @@ public class JsonConverter {
     }
     return result;
   }
-
 }

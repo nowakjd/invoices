@@ -20,11 +20,6 @@ class FileProcessorTest {
           + "resources" + fileSeparator;
   private final File actual = new File(resourcesPath + "actual");
 
-  @AfterEach
-  void cleanUp() {
-    actual.delete();
-  }
-
   @Test
   void shouldSaveLines() throws DatabaseOperationException, IOException {
     File saveLineExpected = new File(resourcesPath + "saveLineExpected");
@@ -32,7 +27,8 @@ class FileProcessorTest {
         resourcesPath + "actual");
     fileProcessor.addLine("a");
     fileProcessor.addLine("a b");
-    assertTrue(FileUtils.contentEquals(saveLineExpected, actual));
+    assertTrue(FileUtils.contentEqualsIgnoreEOL(saveLineExpected, actual,null));
+    assertTrue(actual.delete());
   }
 
   @Test
@@ -42,7 +38,8 @@ class FileProcessorTest {
     FileProcessor fileProcessor = new FileProcessor(resourcesPath + "actual");
     fileProcessor.removeLine("abcd");
     File removeLinesExpected = new File(resourcesPath + "removeLinesExpected");
-    assertTrue(FileUtils.contentEquals(removeLinesExpected, actual));
+    assertTrue(FileUtils.contentEqualsIgnoreEOL(removeLinesExpected, actual,null));
+    assertTrue(actual.delete());
   }
 
   @Test

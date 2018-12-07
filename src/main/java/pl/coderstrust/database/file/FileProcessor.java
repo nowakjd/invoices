@@ -14,9 +14,9 @@ import java.util.List;
 
 public class FileProcessor {
 
-  private String fileName;
+  private final String fileName;
 
-  public FileProcessor(String fileName) {
+  FileProcessor(String fileName) {
     this.fileName = fileName;
   }
 
@@ -25,7 +25,7 @@ public class FileProcessor {
     ) {
       printWriter.println(line);
     } catch (IOException exc) {
-      throw new DatabaseOperationException("error during adding to file");
+      throw new DatabaseOperationException("Error during adding to file");
     }
   }
 
@@ -43,9 +43,9 @@ public class FileProcessor {
         }
       }
     } catch (FileNotFoundException exception) {
-      throw new DatabaseOperationException("database not found");
+      throw new DatabaseOperationException("Database not found");
     } catch (IOException exception) {
-      throw new DatabaseOperationException("error during processing database");
+      throw new DatabaseOperationException("Error during processing database");
     }
   }
 
