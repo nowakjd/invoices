@@ -31,8 +31,7 @@ public class FileProcessor {
 
   public void removeLine(String lineToRemove) throws DatabaseOperationException {
     String lineFromFile;
-    try {
-      RandomAccessFile randomAccessFile = new RandomAccessFile(fileName, "rw");
+    try (RandomAccessFile randomAccessFile = new RandomAccessFile(fileName, "rw")) {
       while (randomAccessFile.getFilePointer() < randomAccessFile.length()) {
         lineFromFile = randomAccessFile.readLine();
         if (lineFromFile.equals(lineToRemove)) {
@@ -43,9 +42,9 @@ public class FileProcessor {
         }
       }
     } catch (FileNotFoundException exception) {
-      throw new DatabaseOperationException("Database not found");
+      throw new DatabaseOperationException("Database not found", exception);
     } catch (IOException exception) {
-      throw new DatabaseOperationException("Error during processing database");
+      throw new DatabaseOperationException("Error during processing database", exception);
     }
   }
 

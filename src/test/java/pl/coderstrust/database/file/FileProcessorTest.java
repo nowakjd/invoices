@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.commons.io.FileUtils;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import pl.coderstrust.database.DatabaseOperationException;
 
@@ -27,7 +26,7 @@ class FileProcessorTest {
         resourcesPath + "actual");
     fileProcessor.addLine("a");
     fileProcessor.addLine("a b");
-    assertTrue(FileUtils.contentEqualsIgnoreEOL(saveLineExpected, actual,null));
+    assertTrue(FileUtils.contentEqualsIgnoreEOL(saveLineExpected, actual, null));
     assertTrue(actual.delete());
   }
 
@@ -38,7 +37,7 @@ class FileProcessorTest {
     FileProcessor fileProcessor = new FileProcessor(resourcesPath + "actual");
     fileProcessor.removeLine("abcd");
     File removeLinesExpected = new File(resourcesPath + "removeLinesExpected");
-    assertTrue(FileUtils.contentEqualsIgnoreEOL(removeLinesExpected, actual,null));
+    assertTrue(FileUtils.contentEqualsIgnoreEOL(removeLinesExpected, actual, null));
     assertTrue(actual.delete());
   }
 

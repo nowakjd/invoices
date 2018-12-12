@@ -4,13 +4,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import pl.coderstrust.database.file.FileProcessor;
 import pl.coderstrust.database.file.IdGenerator;
 import pl.coderstrust.database.file.JsonConverter;
-import pl.coderstrust.model.Company;
 import pl.coderstrust.model.Invoice;
 
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Collection;
-import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 public class InFileDatabase implements Database {

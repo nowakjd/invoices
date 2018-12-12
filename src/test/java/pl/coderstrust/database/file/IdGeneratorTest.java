@@ -1,6 +1,7 @@
 package pl.coderstrust.database.file;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.AfterEach;
@@ -21,7 +22,7 @@ class IdGeneratorTest {
 
   @AfterEach
   void cleanUp() {
-    database.delete();
+    assertTrue(database.delete());
   }
 
   @Test
