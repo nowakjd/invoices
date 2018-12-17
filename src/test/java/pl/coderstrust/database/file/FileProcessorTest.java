@@ -8,7 +8,9 @@ import org.junit.jupiter.api.Test;
 import pl.coderstrust.database.DatabaseOperationException;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 
 class FileProcessorTest {
@@ -38,6 +40,26 @@ class FileProcessorTest {
     fileProcessor.removeLine("abcd");
     File removeLinesExpected = new File(resourcesPath + "removeLinesExpected");
     assertTrue(FileUtils.contentEqualsIgnoreEOL(removeLinesExpected, actual, null));
+    assertTrue(actual.delete());
+  }
+
+  @Test
+  void shouldRemoveLineWithDifferentEol() throws DatabaseOperationException, IOException {
+    try (PrintWriter printWriter = new PrintWriter(new FileWriter(resourcesPath + "actual", true))
+    ) {
+      printWriter.println("example line");
+      printWriter.print("windows" + '\r' + '\n');
+      printWriter.println("example line");
+      printWriter.print("unix" + '\n');
+      printWriter.println("example line");
+    } catch (IOException exc) {
+      exc.printStackTrace();
+    }
+    FileProcessor fileProcessor = new FileProcessor(resourcesPath + "actual");
+    fileProcessor.removeLine("windows");
+    fileProcessor.removeLine("unix");
+    File differentEolExpected = new File(resourcesPath + "differentEolExpected");
+    assertTrue(FileUtils.contentEqualsIgnoreEOL(differentEolExpected, actual, null));
     assertTrue(actual.delete());
   }
 

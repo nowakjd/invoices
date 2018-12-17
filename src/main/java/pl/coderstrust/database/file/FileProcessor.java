@@ -36,7 +36,12 @@ public class FileProcessor {
         lineFromFile = randomAccessFile.readLine();
         if (lineFromFile.equals(lineToRemove)) {
           int spaceInFile = lineFromFile.getBytes().length;
-          randomAccessFile.seek(randomAccessFile.getFilePointer() - spaceInFile - 1);
+          randomAccessFile.seek(randomAccessFile.getFilePointer() - 2);
+          if (randomAccessFile.readByte() != '\r') {
+            randomAccessFile.seek(randomAccessFile.getFilePointer() - spaceInFile);
+          } else {
+            randomAccessFile.seek(randomAccessFile.getFilePointer() - spaceInFile - 1);
+          }
           @SuppressWarnings("ReplaceAllDot") String emptyline = lineFromFile.replaceAll(".", " ");
           randomAccessFile.writeBytes(emptyline);
         }
