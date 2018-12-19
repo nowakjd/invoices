@@ -49,7 +49,6 @@ class HibernateDatabaseTest {
   private List<Invoice> invoiceListByCompany;
   private List<Invoice> invoiceListByDate;
 
-
   @BeforeAll
   void setUp() {
     buyer = new Company(null, "Netflix", null,
@@ -69,7 +68,6 @@ class HibernateDatabaseTest {
     invoiceList = Arrays.asList(invoice2, invoice3);
     invoiceListByCompany = Collections.singletonList(invoice3);
     invoiceListByDate = Collections.singletonList(invoice3);
-
   }
 
   @Test
