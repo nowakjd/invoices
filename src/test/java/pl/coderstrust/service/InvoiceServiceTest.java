@@ -17,7 +17,7 @@ import java.time.LocalDate;
 
 @ExtendWith(MockitoExtension.class)
 class InvoiceServiceTest {
-  
+
   private static LocalDate fromDate;
   private static LocalDate toDate;
   private InvoiceService invoiceService;

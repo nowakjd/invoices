@@ -7,18 +7,29 @@ import io.swagger.annotations.ApiModelProperty;
 import pl.coderstrust.service.StringValidator;
 
 import java.util.Objects;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 @ApiModel(value = "AddressModel", description = "Sample address model")
+@Entity
 public class Address {
 
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  private Long id;
   @ApiModelProperty(value = "The street where company is located", example = "Wall Street")
-  private final String street;
+  private String street;
   @ApiModelProperty(value = "The number of building", example = "12B/134")
-  private final String number;
+  private String number;
   @ApiModelProperty(value = "The city of company's headquarters", example = "New York")
-  private final String city;
+  private String city;
   @ApiModelProperty(value = "The postal code of city", example = "12-999")
-  private final String zipCode;
+  private String zipCode;
+
+  protected Address() {
+  }
 
   @JsonCreator
   public Address(
@@ -33,19 +44,23 @@ public class Address {
     this.city = city;
   }
 
-  String getStreet() {
+  public Long getId() {
+    return id;
+  }
+
+  public String getStreet() {
     return street;
   }
 
-  String getNumber() {
+  public String getNumber() {
     return number;
   }
 
-  String getCity() {
+  public String getCity() {
     return city;
   }
 
-  String getZipCode() {
+  public String getZipCode() {
     return zipCode;
   }
 
