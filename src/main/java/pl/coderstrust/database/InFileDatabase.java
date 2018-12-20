@@ -1,6 +1,8 @@
 package pl.coderstrust.database;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.stereotype.Repository;
 import pl.coderstrust.database.file.FileProcessor;
 import pl.coderstrust.database.file.IdGenerator;
 import pl.coderstrust.database.file.JsonConverter;
@@ -11,6 +13,8 @@ import java.time.LocalDate;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
+@ConditionalOnProperty(name = "pl.coderstrust.database", havingValue = "InFileDatabase")
+@Repository
 public class InFileDatabase implements Database {
 
   private final IdGenerator idGenerator;

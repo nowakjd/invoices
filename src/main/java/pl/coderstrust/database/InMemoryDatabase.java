@@ -1,5 +1,6 @@
 package pl.coderstrust.database;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
 import pl.coderstrust.model.Company;
 import pl.coderstrust.model.Invoice;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@ConditionalOnProperty(name = "pl.coderstrust.database", havingValue = "inMemoryDatabase")
 @Repository
 public class InMemoryDatabase implements Database {
 
