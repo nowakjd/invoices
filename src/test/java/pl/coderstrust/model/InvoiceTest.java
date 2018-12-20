@@ -50,7 +50,7 @@ class InvoiceTest {
   @DisplayName("Checking date out of range")
   void testInvalidDate() {
     IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-        () -> new Invoice(ID, LocalDate.of(2020, 12, 10), ENTRIES, ISSUE, SELLER,
+        () -> new Invoice(ID, LocalDate.now().plusYears(5), ENTRIES, ISSUE, SELLER,
             BUYER));
     assertEquals("Passing date cannot be in the future", exception.getMessage());
   }
