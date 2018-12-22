@@ -2,8 +2,11 @@ package pl.coderstrust.database;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
+import static org.mockito.BDDMockito.willDoNothing;
+import static org.mockito.BDDMockito.willThrow;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -14,6 +17,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.dao.EmptyResultDataAccessException;
 import pl.coderstrust.database.hibernate.CompanyRepository;
 import pl.coderstrust.database.hibernate.InvoiceRepository;
 import pl.coderstrust.model.Company;
@@ -24,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
@@ -127,7 +132,19 @@ class HibernateDatabaseTest {
   @Test
   @DisplayName("Delete invoice by id")
   void deleteMethodTest() throws DatabaseOperationException {
+    willDoNothing().given(invoiceRepository).deleteById(1L);
     hibernateDatabase.delete(1L);
     then(invoiceRepository).should().deleteById(1L);
+  }
+
+  @Test
+  @DisplayName("Operations without existing id")
+  void operationsWithoutExistingId() {
+    willThrow(EmptyResultDataAccessException.class).given(invoiceRepository).deleteById(2L);
+    willThrow(NoSuchElementException.class).given(invoiceRepository).findById(3L);
+    assertThrows(DatabaseOperationException.class, () -> hibernateDatabase.delete(2L));
+    assertThrows(DatabaseOperationException.class, () -> hibernateDatabase.findByBuyer(1L));
+    assertThrows(DatabaseOperationException.class, () -> hibernateDatabase.findBySeller(4L));
+    assertThrows(DatabaseOperationException.class, () -> hibernateDatabase.findOne(3L));
   }
 }
