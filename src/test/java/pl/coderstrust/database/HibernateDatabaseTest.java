@@ -1,4 +1,4 @@
-package pl.coderstrust.database.hibernate;
+package pl.coderstrust.database;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -14,7 +14,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import pl.coderstrust.database.DatabaseOperationException;
+import pl.coderstrust.database.hibernate.CompanyRepository;
+import pl.coderstrust.database.hibernate.InvoiceRepository;
 import pl.coderstrust.model.Company;
 import pl.coderstrust.model.Invoice;
 
