@@ -71,9 +71,14 @@ public class HibernateDatabase implements Database {
   public Collection<Invoice> findByDate(LocalDate fromDate, LocalDate toDate)
       throws DatabaseOperationException {
     return invoiceRepository.findAll().stream()
-        .filter(invoice -> !fromDate.isAfter(invoice.getIssueDate()) && !toDate
-            .isBefore(invoice.getIssueDate()))
+        .filter(invoice -> isValidIssueDate(invoice, fromDate, toDate))
         .collect(Collectors.toList());
+  }
+
+  private boolean isValidIssueDate(Invoice invoice, LocalDate fromDate, LocalDate toDate) {
+    boolean startDate = !fromDate.isAfter(invoice.getIssueDate());
+    boolean endDate = !toDate.isBefore(invoice.getIssueDate());
+    return startDate && endDate;
   }
 
   @Override
