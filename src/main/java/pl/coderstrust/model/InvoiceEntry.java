@@ -2,7 +2,6 @@ package pl.coderstrust.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -42,7 +41,9 @@ public class InvoiceEntry {
   }
 
   @JsonCreator
-  public InvoiceEntry(@JsonProperty("amount") double amount,
+  public InvoiceEntry(
+      @JsonProperty("id") Long id,
+      @JsonProperty("amount") double amount,
       @JsonProperty("productName") String productName,
       @JsonProperty("unit") String unit,
       @JsonProperty("price") BigDecimal price,
@@ -52,6 +53,7 @@ public class InvoiceEntry {
     if (amount <= 0) {
       throw new IllegalArgumentException("The amount must be greater than 0");
     }
+    this.id = id;
     this.amount = amount;
     this.productName = productName;
     this.unit = unit;

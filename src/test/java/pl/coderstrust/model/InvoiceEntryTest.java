@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 
 class InvoiceEntryTest {
 
+  private static final Long ID = 1L;
   private static final double AMOUNT = 4;
   private static final String PRODUCT_NAME = "Microwave";
   private static final String UNIT = "szt";
@@ -23,10 +24,12 @@ class InvoiceEntryTest {
 
   @Test
   void testGetters() {
-    InvoiceEntry entry = new InvoiceEntry(AMOUNT, PRODUCT_NAME, UNIT, PRICE, VAT_RATE, NET_VALUE,
+    InvoiceEntry entry = new InvoiceEntry(ID, AMOUNT, PRODUCT_NAME, UNIT, PRICE, VAT_RATE,
+        NET_VALUE,
         GROSS_VALUE);
 
     assertAll(
+        () -> assertEquals(ID, entry.getId()),
         () -> assertEquals(AMOUNT, entry.getAmount()),
         () -> assertEquals(PRODUCT_NAME, entry.getProductName()),
         () -> assertEquals(UNIT, entry.getUnit()),
@@ -43,7 +46,7 @@ class InvoiceEntryTest {
   void checkSetInvalidAmount(double amount) {
     IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
         () -> {
-          InvoiceEntry entry = new InvoiceEntry(amount, PRODUCT_NAME, UNIT, PRICE, VAT_RATE,
+          InvoiceEntry entry = new InvoiceEntry(ID, amount, PRODUCT_NAME, UNIT, PRICE, VAT_RATE,
               NET_VALUE, GROSS_VALUE);
         }
     );

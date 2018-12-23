@@ -67,20 +67,21 @@ class InFileDatabaseTest {
 
   @BeforeAll
   static void setUp() {
-    Address address = new Address("Wall Street", "12/55B", "New York", "12-999");
+    Address address = new Address(1L, "Wall Street", "12/55B", "New York", "12-999");
     Company seller2 = new Company(1L, "Microsoft", address, "5272830422",
         "11114015601081110181488249");
     seller1 = new Company(2L, "Bush", address, "5272830422", "11114015601081110181488249");
     Company buyer2 = new Company(41L, "Netflix", address, "6570011469",
         "11114015601081110181488249");
     buyer1 = new Company(43L, "Apple", address, "6570011469", "11114015601081110181488249");
-    InvoiceEntry invoiceEntry1 = new InvoiceEntry(10, "Lego", "piece", new BigDecimal(199.99),
+    InvoiceEntry invoiceEntry1 = new InvoiceEntry(1L, 10, "Lego", "piece", new BigDecimal(199.99),
         Vat.RATE_23,
         new BigDecimal(199.99), new BigDecimal(500));
-    InvoiceEntry invoiceEntry2 = new InvoiceEntry(4, "Barbie", "piece", new BigDecimal(123.11),
+    InvoiceEntry invoiceEntry2 = new InvoiceEntry(2L, 4, "Barbie", "piece", new BigDecimal(123.11),
         Vat.RATE_8,
         new BigDecimal(399.99), new BigDecimal(100));
-    InvoiceEntry invoiceEntry3 = new InvoiceEntry(1, "Sand", "kg", new BigDecimal(19), Vat.RATE_0,
+    InvoiceEntry invoiceEntry3 = new InvoiceEntry(3L, 1, "Sand", "kg", new BigDecimal(19),
+        Vat.RATE_0,
         new BigDecimal(99), new BigDecimal(12));
     List<InvoiceEntry> invoiceEntries = new ArrayList<>(
         Arrays.asList(invoiceEntry1, invoiceEntry2, invoiceEntry3));
@@ -149,7 +150,7 @@ class InFileDatabaseTest {
     ArrayList<Invoice> bySeller2 = (ArrayList<Invoice>) inFileDatabase
         .findBySeller(seller1.getCompanyId());
     assertEquals(2, bySeller2.size());
-    assertThat(bySeller2, Matchers.containsInAnyOrder(invoice3,invoice4));
+    assertThat(bySeller2, Matchers.containsInAnyOrder(invoice3, invoice4));
     verify(fileProcessorMock, never()).addLine(any());
     verify(fileProcessorMock, never()).removeLine(any());
   }
@@ -174,7 +175,7 @@ class InFileDatabaseTest {
     Collection<Invoice> actual = inFileDatabase
         .findByDate(referenceDate.minusDays(10), referenceDate.minusDays(6));
     assertEquals(2, actual.size());
-    assertThat(actual, Matchers.containsInAnyOrder(invoice2,invoice4));
+    assertThat(actual, Matchers.containsInAnyOrder(invoice2, invoice4));
     verify(fileProcessorMock, never()).addLine(any());
     verify(fileProcessorMock, never()).removeLine(any());
   }

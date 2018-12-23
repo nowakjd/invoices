@@ -21,7 +21,7 @@ class StringValidatorTest {
 
   @BeforeEach
   void setUp() {
-    address = new Address("Wiejska", "125/3B", "Warszawa", "01-159");
+    address = new Address(1L, "Wiejska", "125/3B", "Warszawa", "01-159");
   }
 
   @ParameterizedTest
@@ -64,7 +64,7 @@ class StringValidatorTest {
   @DisplayName("Checking valid syntax of zip-code.")
   @ValueSource(strings = {"25-701", "00-001", "12-345", "44-666"})
   void checkSetValidZipCode(String zipCode) {
-    Address address = new Address("Foo", "666", "foo", zipCode);
+    Address address = new Address(1L, "Foo", "666", "foo", zipCode);
     assertEquals(zipCode, address.getZipCode());
   }
 
@@ -72,7 +72,7 @@ class StringValidatorTest {
   @DisplayName("Checking invalid syntax of zip-code.")
   @ValueSource(strings = {"", "1235454", "2018", "text", "6570011460"})
   void checkSetInvalidZipCod(String zipCode) {
-    assertThrows(PatternSyntaxException.class, () -> new Address("Foo", "666", "foo", zipCode));
+    assertThrows(PatternSyntaxException.class, () -> new Address(1L, "Foo", "666", "foo", zipCode));
   }
 
   @ParameterizedTest
@@ -81,7 +81,7 @@ class StringValidatorTest {
   void checkStringGettersAndSetters(String strings) {
     Company company = new Company(111L, strings, address, "65 - 70 - 082 - 357",
         "54114020040000340277983541");
-    Address address = new Address(strings, strings, strings, "02-066");
+    Address address = new Address(1L, strings, strings, strings, "02-066");
     assertAll(
         () -> assertEquals(strings, company.getCompanyName()),
         () -> assertEquals(strings, address.getCity()),
@@ -96,7 +96,11 @@ class StringValidatorTest {
   void checkIntegerGettersAndSetters(Long number) {
     Company company = new Company(number, "Zus", address, "65 - 70 - 082 - 357",
         "54114020040000340277983541");
-    assertAll(() -> assertEquals(number, company.getCompanyId()));
+    Address address = new Address(number, "Wiejska", "12B/4", "Warszawa", "02-066");
+    assertAll(
+        () -> assertEquals(number, company.getCompanyId()),
+        () -> assertEquals(number, address.getId())
+    );
   }
 
   @Test
@@ -104,7 +108,7 @@ class StringValidatorTest {
   void checkAddressGetterAndSetter() {
     Company company = new Company(123L, "Zus", address, "65 - 70 - 082 - 357",
         "54114020040000340277983541");
-    Address address2 = new Address("Wiejska", "12B/4", "Warszawa", "00-002");
+    Address address2 = new Address(1L, "Wiejska", "12B/4", "Warszawa", "00-002");
     assertNotEquals(address2, company.getAddress());
     assertEquals(address, company.getAddress());
   }

@@ -39,19 +39,21 @@ class InMemoryDatabaseTest {
 
   @BeforeAll
   void setUp() {
-    Address address = new Address("Wall Street", "12/55B", "New York", "12-999");
+    Address address = new Address(1L, "Wall Street", "12/55B", "New York", "12-999");
     seller1 = new Company(1L, "Microsoft", address, "5272830422",
         "11114015601081110181488249");
     Company buyer2 = new Company(43L, "Apple", address, "6570011469", "11114015601081110181488249");
     buyer1 = new Company(41L, "Netflix", address, "6570011469", "11114015601081110181488249");
-    InvoiceEntry invoiceEntry1 = new InvoiceEntry(10, "Lego", "piece", BigDecimal.valueOf(199.99),
+    InvoiceEntry invoiceEntry1 = new InvoiceEntry(1L, 10, "Lego", "piece",
+        BigDecimal.valueOf(199.99),
         Vat.RATE_23,
         BigDecimal.valueOf(199.99), BigDecimal.valueOf(500));
     Company seller2 = new Company(2L, "Bush", address, "5272830422", "11114015601081110181488249");
-    InvoiceEntry invoiceEntry2 = new InvoiceEntry(4, "Barbie", "piece", BigDecimal.valueOf(123.11),
+    InvoiceEntry invoiceEntry2 = new InvoiceEntry(2L, 4, "Barbie", "piece",
+        BigDecimal.valueOf(123.11),
         Vat.RATE_8,
         BigDecimal.valueOf(399.99), BigDecimal.valueOf(100));
-    InvoiceEntry invoiceEntry3 = new InvoiceEntry(1, "Sand", "kg",
+    InvoiceEntry invoiceEntry3 = new InvoiceEntry(3L, 1, "Sand", "kg",
         BigDecimal.valueOf(19), Vat.RATE_0, BigDecimal.valueOf(99), BigDecimal.valueOf(12));
     List<InvoiceEntry> invoiceEntries = new ArrayList<>(
         Arrays.asList(invoiceEntry1, invoiceEntry2, invoiceEntry3));
