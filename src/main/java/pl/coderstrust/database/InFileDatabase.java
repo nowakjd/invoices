@@ -13,7 +13,7 @@ import java.time.LocalDate;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-@ConditionalOnProperty(name = "pl.coderstrust.database", havingValue = "InFileDatabase")
+@ConditionalOnProperty(name = "pl.coderstrust.database", havingValue = "file")
 @Repository
 public class InFileDatabase implements Database {
 

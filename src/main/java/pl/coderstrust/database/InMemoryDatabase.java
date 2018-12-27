@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@ConditionalOnProperty(name = "pl.coderstrust.database", havingValue = "inMemoryDatabase")
+@ConditionalOnProperty(name = "pl.coderstrust.database", havingValue = "memory")
 @Repository
 public class InMemoryDatabase implements Database {
 
