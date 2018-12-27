@@ -14,7 +14,7 @@ import java.util.Collection;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
-@ConditionalOnProperty(name = "pl.coderstrust.database", havingValue = "hibernateDatabase")
+@ConditionalOnProperty(name = "pl.coderstrust.database", havingValue = "hibernate")
 @Repository
 public class HibernateDatabase implements Database {
 
