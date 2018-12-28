@@ -101,7 +101,7 @@ class HibernateDatabaseTest {
   }
 
   @Test
-  @DisplayName("Find invoicesby buyer")
+  @DisplayName("Find invoices by buyer")
   void findByBuyer() throws DatabaseOperationException {
     given(companyRepository.findById(1L)).willReturn(Optional.ofNullable(buyer1));
     given(invoiceRepository.findByBuyer(buyer1)).willReturn(invoiceListByCompany);

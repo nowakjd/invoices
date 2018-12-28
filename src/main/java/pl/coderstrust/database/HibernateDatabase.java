@@ -3,6 +3,7 @@ package pl.coderstrust.database;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.dao.NonTransientDataAccessException;
 import org.springframework.stereotype.Repository;
 import pl.coderstrust.database.hibernate.CompanyRepository;
 import pl.coderstrust.database.hibernate.InvoiceRepository;
@@ -30,7 +31,11 @@ public class HibernateDatabase implements Database {
 
   @Override
   public Invoice save(Invoice invoice) throws DatabaseOperationException {
-    return invoiceRepository.save(invoice);
+    try {
+      return invoiceRepository.save(invoice);
+    } catch (NonTransientDataAccessException ex) {
+      throw new DatabaseOperationException("Failed to save/update", ex);
+    }
   }
 
   @Override
@@ -38,13 +43,18 @@ public class HibernateDatabase implements Database {
     try {
       invoiceRepository.deleteById(id);
     } catch (EmptyResultDataAccessException ex) {
-      throw new DatabaseOperationException("Invoice of id: " + id + " does not exist.");
+      throw new DatabaseOperationException("Invoice of id: " + id + " does not exist.", ex);
     }
   }
 
   @Override
   public Collection<Invoice> findAll() throws DatabaseOperationException {
-    return invoiceRepository.findAll();
+    try {
+      return invoiceRepository.findAll();
+    } catch (NonTransientDataAccessException ex) {
+      throw new DatabaseOperationException(
+          "Failed to get list of invoices. No invoices in database", ex);
+    }
   }
 
   @Override
@@ -53,7 +63,7 @@ public class HibernateDatabase implements Database {
       Company company = companyRepository.findById(companyId).get();
       return invoiceRepository.findByBuyer(company);
     } catch (NoSuchElementException ex) {
-      throw new DatabaseOperationException("Buyer of id: " + companyId + " does not exist.");
+      throw new DatabaseOperationException("Buyer of id: " + companyId + " does not exist.", ex);
     }
   }
 
@@ -63,16 +73,21 @@ public class HibernateDatabase implements Database {
       Company company = companyRepository.findById(companyId).get();
       return invoiceRepository.findBySeller(company);
     } catch (NoSuchElementException ex) {
-      throw new DatabaseOperationException("Seller of id: " + companyId + " does not exist.");
+      throw new DatabaseOperationException("Seller of id: " + companyId + " does not exist.", ex);
     }
   }
 
   @Override
   public Collection<Invoice> findByDate(LocalDate fromDate, LocalDate toDate)
       throws DatabaseOperationException {
-    return invoiceRepository.findAll().stream()
-        .filter(invoice -> isValidIssueDate(invoice, fromDate, toDate))
-        .collect(Collectors.toList());
+    try {
+      return invoiceRepository.findAll().stream()
+          .filter(invoice -> isValidIssueDate(invoice, fromDate, toDate))
+          .collect(Collectors.toList());
+    } catch (NonTransientDataAccessException ex) {
+      throw new DatabaseOperationException(
+          "Failed to get list of invoices. No invoices meeting criteria", ex);
+    }
   }
 
   private boolean isValidIssueDate(Invoice invoice, LocalDate fromDate, LocalDate toDate) {
@@ -86,7 +101,7 @@ public class HibernateDatabase implements Database {
     try {
       return invoiceRepository.findById(id).get();
     } catch (NoSuchElementException ex) {
-      throw new DatabaseOperationException("Invoice of id: " + id + " does not exist.");
+      throw new DatabaseOperationException("Invoice of id: " + id + " does not exist.", ex);
     }
   }
 }
