@@ -13,6 +13,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+
 @ApiModel(value = "InvoiceEntryModel", description = "Sample InvoiceEntry model")
 @Entity
 public class InvoiceEntry {
@@ -67,30 +68,38 @@ public class InvoiceEntry {
     return id;
   }
 
+  // Public getters are requires in converting to JSONs by Object Mapper
+  @SuppressWarnings("WeakerAccess")
   public double getAmount() {
     return amount;
   }
 
+  @SuppressWarnings("WeakerAccess")
   public String getProductName() {
     return productName;
   }
 
+  @SuppressWarnings("WeakerAccess")
   public String getUnit() {
     return unit;
   }
 
+  @SuppressWarnings("WeakerAccess")
   public BigDecimal getPrice() {
     return price;
   }
 
+  @SuppressWarnings("WeakerAccess")
   public Vat getVatRate() {
     return vatRate;
   }
 
+  @SuppressWarnings("WeakerAccess")
   public BigDecimal getNetValue() {
     return netValue;
   }
 
+  @SuppressWarnings("WeakerAccess")
   public BigDecimal getGrossValue() {
     return grossValue;
   }

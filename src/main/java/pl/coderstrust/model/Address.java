@@ -49,18 +49,23 @@ public class Address {
     return id;
   }
 
+  // Public getters are requires in converting to JSONs by Object Mapper
+  @SuppressWarnings("WeakerAccess")
   public String getStreet() {
     return street;
   }
 
+  @SuppressWarnings("WeakerAccess")
   public String getNumber() {
     return number;
   }
 
+  @SuppressWarnings("WeakerAccess")
   public String getCity() {
     return city;
   }
 
+  @SuppressWarnings("WeakerAccess")
   public String getZipCode() {
     return zipCode;
   }
