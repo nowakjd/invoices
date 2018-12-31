@@ -2,10 +2,12 @@ package pl.coderstrust.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -103,5 +105,28 @@ public class InvoiceEntry {
   @SuppressWarnings("WeakerAccess")
   public BigDecimal getGrossValue() {
     return grossValue;
+  }
+
+  @Override
+  public boolean equals(Object object) {
+    if (this == object) {
+      return true;
+    }
+    if (object == null || getClass() != object.getClass()) {
+      return false;
+    }
+    InvoiceEntry that = (InvoiceEntry) object;
+    return Double.compare(that.amount, amount) == 0
+        && Objects.equals(productName, that.productName)
+        && Objects.equals(unit, that.unit)
+        && Objects.equals(price, that.price)
+        && vatRate == that.vatRate
+        && Objects.equals(netValue, that.netValue)
+        && Objects.equals(grossValue, that.grossValue);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(amount, productName, unit, price, vatRate, netValue, grossValue);
   }
 }
