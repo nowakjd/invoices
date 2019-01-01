@@ -53,6 +53,7 @@
           <failOnViolation>true</failOnViolation>
           <violationSeverity>warning</violationSeverity>
           <includeTestSourceDirectory>true</includeTestSourceDirectory>
+          <excludes>**/bindingClasses/**/*</excludes>
           <configLocation>checkstyle-config/checkstyle-checker.xml</configLocation>
           <encoding>UTF-8</encoding>
           <consoleOutput>true</consoleOutput>
@@ -116,6 +117,25 @@
               <mainClass>com.mkyong.core.App</mainClass>
             </manifest>
           </archive>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>jaxb2-maven-plugin</artifactId>
+        <version>2.4</version>
+        <executions>
+          <execution>
+            <id>xjc</id>
+            <goals>
+              <goal>xjc</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <schemaDirectory>${project.basedir}/src/main/resources/</schemaDirectory>
+          <outputDirectory>${project.basedir}/src/main/java</outputDirectory>
+          <clearOutputDir>false</clearOutputDir>
+          <packageName>pl.coderstrust.service.soap.bindingClasses</packageName>
         </configuration>
       </plugin>
     </plugins>
@@ -208,6 +228,14 @@
       <groupId>javax.xml.bind</groupId>
       <artifactId>jaxb-api</artifactId>
       <version>2.3.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web-services</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>wsdl4j</groupId>
+      <artifactId>wsdl4j</artifactId>
     </dependency>
   </dependencies>
 </project>
