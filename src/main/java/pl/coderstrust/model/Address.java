@@ -45,11 +45,12 @@ public class Address {
     this.city = city;
   }
 
+  // Public getters are requires in converting to JSONs by Object Mapper
+  @SuppressWarnings("WeakerAccess")
   public Long getId() {
     return id;
   }
 
-  // Public getters are requires in converting to JSONs by Object Mapper
   @SuppressWarnings("WeakerAccess")
   public String getStreet() {
     return street;
