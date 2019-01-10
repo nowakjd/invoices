@@ -23,7 +23,7 @@ public class InvoiceService {
   public Invoice save(Invoice invoice) throws DatabaseOperationException {
     try {
       Invoice savedInvoice = database.save(invoice);
-      log.info("Invoice of id:{} saved.", savedInvoice.getId());
+      log.info("Invoice saved.");
       return savedInvoice;
     } catch (Exception exception) {
       log.error("Invoice is not saved.", exception);
