@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.BDDMockito.willDoNothing;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -15,6 +16,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.junit.Before;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -26,8 +28,11 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 import pl.coderstrust.model.Company;
 import pl.coderstrust.model.Invoice;
 import pl.coderstrust.service.InvoiceService;
@@ -45,6 +50,9 @@ import java.util.List;
 class InvoiceControllerTest {
 
   @Autowired
+  private WebApplicationContext context;
+
+  @Autowired
   private MockMvc mockMvc;
 
   @MockBean
@@ -56,7 +64,6 @@ class InvoiceControllerTest {
   private Invoice invoice2;
   private List<Invoice> invoiceList;
   private List<Invoice> invoiceListByCompany;
-
 
   @BeforeAll
   void setUp() {
@@ -70,9 +77,17 @@ class InvoiceControllerTest {
         new ArrayList<>(), "FA/444/2018", seller, buyer);
     invoiceList = Arrays.asList(invoice1, invoice2);
     invoiceListByCompany = Collections.singletonList(invoice1);
-
   }
 
+  @Before
+  public void setup() {
+    mockMvc = MockMvcBuilders
+        .webAppContextSetup(context)
+        .apply(springSecurity())
+        .build();
+  }
+
+  @WithMockUser("admin")
   @Test
   @DisplayName("Checking the save method call")
   void saveMethodTest() throws Exception {
@@ -98,6 +113,7 @@ class InvoiceControllerTest {
     then(invoiceService).should().save(invoice1);
   }
 
+  @WithMockUser("admin")
   @Test
   @DisplayName("Checking the findAll method call")
   void getFindAllTest() throws Exception {
@@ -117,6 +133,7 @@ class InvoiceControllerTest {
     then(invoiceService).should().findAll();
   }
 
+  @WithMockUser("admin")
   @Test
   @DisplayName("Checking the findById method call")
   void getFindByIdTest() throws Exception {
@@ -131,6 +148,7 @@ class InvoiceControllerTest {
     then(invoiceService).should().findOne(1L);
   }
 
+  @WithMockUser("admin")
   @Test
   @DisplayName("Checking the findByDate method call")
   void getFindByDateTest() throws Exception {
@@ -146,6 +164,7 @@ class InvoiceControllerTest {
             LocalDate.of(2018, 10, 30));
   }
 
+  @WithMockUser("admin")
   @Test
   @DisplayName("Checking the findByBuyer method call")
   void getFindByBuyer() throws Exception {
@@ -162,6 +181,7 @@ class InvoiceControllerTest {
     then(invoiceService).should().findByBuyer(41L);
   }
 
+  @WithMockUser("admin")
   @Test
   @DisplayName("Checking the findBySeller method call")
   void getBySeller() throws Exception {
@@ -178,6 +198,7 @@ class InvoiceControllerTest {
     then(invoiceService).should().findBySeller(1L);
   }
 
+  @WithMockUser("admin")
   @Test
   @DisplayName("Checking the deleteById method call")
   void deleteByIdTest() throws Exception {
