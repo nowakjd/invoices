@@ -1,5 +1,6 @@
 package pl.coderstrust.service.soap;
 
+import org.springframework.stereotype.Component;
 import pl.coderstrust.service.soap.bindingClasses.Address;
 import pl.coderstrust.service.soap.bindingClasses.Company;
 import pl.coderstrust.service.soap.bindingClasses.Invoice;
@@ -9,25 +10,24 @@ import pl.coderstrust.service.soap.bindingClasses.Vat;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
+@Component
 class SoapConverter {
 
-  pl.coderstrust.model.Invoice soapInvoiceToInvoice(Invoice soapInvoice) {
+  pl.coderstrust.model.Invoice toInvoice(Invoice soapInvoice) {
     Long id = soapInvoice.getId();
     LocalDate issueDate = unmarshal(soapInvoice.getIssueDate());
-    List<pl.coderstrust.model.InvoiceEntry> entries = new ArrayList<>();
-    for (InvoiceEntry soapEntry : soapInvoice.getEntries()) {
-      entries.add(soapInvoiceEntryToInvoiceEntry(soapEntry));
-    }
+    List<pl.coderstrust.model.InvoiceEntry> entries = soapInvoice.getEntries().stream()
+        .map(this::soapInvoiceEntryToInvoiceEntry).collect(Collectors.toList());
     String issue = soapInvoice.getIssue();
     pl.coderstrust.model.Company seller = soapCompanyToCompany(soapInvoice.getSeller());
     pl.coderstrust.model.Company buyer = soapCompanyToCompany(soapInvoice.getBuyer());
     return new pl.coderstrust.model.Invoice(id, issueDate, entries, issue, seller, buyer);
   }
 
-  Invoice invoiceToSoapInvoice(pl.coderstrust.model.Invoice invoice) {
+  Invoice toSoapInvoice(pl.coderstrust.model.Invoice invoice) {
     Invoice soapInvoice = new Invoice();
     soapInvoice.setId(invoice.getId());
     soapInvoice.setIssueDate(marshal(invoice.getIssueDate()));

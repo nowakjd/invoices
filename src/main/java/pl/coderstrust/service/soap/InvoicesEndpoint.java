@@ -31,21 +31,22 @@ public class InvoicesEndpoint {
 
   private static final String NAMESPACE_URI = "http://invoiceapp-service.com";
   private InvoiceService invoiceService;
-  private SoapConverter converter = new SoapConverter();
+  private SoapConverter converter;
 
   @Autowired
-  public InvoicesEndpoint(InvoiceService invoiceService) {
+  public InvoicesEndpoint(InvoiceService invoiceService, SoapConverter converter) {
     this.invoiceService = invoiceService;
+    this.converter = converter;
   }
 
   @PayloadRoot(namespace = NAMESPACE_URI, localPart = "saveInvoiceRequest")
   @ResponsePayload
   public SaveInvoiceResponse saveInvoice(@RequestPayload SaveInvoiceRequest request)
       throws DatabaseOperationException {
-    Invoice invoice = converter.soapInvoiceToInvoice(request.getInvoice());
+    Invoice invoice = converter.toInvoice(request.getInvoice());
     SaveInvoiceResponse response = new SaveInvoiceResponse();
     Invoice soapInvoice = invoiceService.save(invoice);
-    response.setInvoice(converter.invoiceToSoapInvoice(soapInvoice));
+    response.setInvoice(converter.toSoapInvoice(soapInvoice));
     return response;
   }
 
@@ -55,7 +56,7 @@ public class InvoicesEndpoint {
       throws DatabaseOperationException {
     Long id = request.getId();
     GetInvoiceByIdResponse response = new GetInvoiceByIdResponse();
-    response.setInvoice(converter.invoiceToSoapInvoice(invoiceService.findOne(id)));
+    response.setInvoice(converter.toSoapInvoice(invoiceService.findOne(id)));
     return response;
   }
 
@@ -66,7 +67,7 @@ public class InvoicesEndpoint {
     Collection<Invoice> invoices = invoiceService.findAll();
     InvoicesList soapInvoices = new InvoicesList();
     for (Invoice invoice : invoices) {
-      soapInvoices.getInvoice().add(converter.invoiceToSoapInvoice(invoice));
+      soapInvoices.getInvoice().add(converter.toSoapInvoice(invoice));
     }
     GetInvoicesResponse response = new GetInvoicesResponse();
     response.setInvoicesList(soapInvoices);
@@ -82,7 +83,7 @@ public class InvoicesEndpoint {
     Collection<Invoice> invoices = invoiceService.findByDate(fromDate, toDate);
     InvoicesList sopaInvoices = new InvoicesList();
     for (Invoice invoice : invoices) {
-      sopaInvoices.getInvoice().add(converter.invoiceToSoapInvoice(invoice));
+      sopaInvoices.getInvoice().add(converter.toSoapInvoice(invoice));
     }
     GetInvoicesByDateResponse response = new GetInvoicesByDateResponse();
     response.setInvoicesList(sopaInvoices);
@@ -105,7 +106,7 @@ public class InvoicesEndpoint {
     Collection<Invoice> invoices = invoiceService.findByBuyer(id);
     InvoicesList soapInvoices = new InvoicesList();
     for (Invoice invoice : invoices) {
-      soapInvoices.getInvoice().add(converter.invoiceToSoapInvoice(invoice));
+      soapInvoices.getInvoice().add(converter.toSoapInvoice(invoice));
     }
     GetInvoicesByBuyerResponse response = new GetInvoicesByBuyerResponse();
     response.setInvoicesList(soapInvoices);
@@ -120,7 +121,7 @@ public class InvoicesEndpoint {
     Collection<Invoice> invoices = invoiceService.findBySeller(id);
     InvoicesList soapInvoices = new InvoicesList();
     for (Invoice invoice : invoices) {
-      soapInvoices.getInvoice().add(converter.invoiceToSoapInvoice(invoice));
+      soapInvoices.getInvoice().add(converter.toSoapInvoice(invoice));
     }
     GetInvoicesBySellerResponse response = new GetInvoicesBySellerResponse();
     response.setInvoicesList(soapInvoices);
