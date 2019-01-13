@@ -1,0 +1,3 @@
+<gs:deleteInvoiceByIdRequest xmlns:gs="http://invoiceapp-service.com">
+  <gs:id>5</gs:id>
+</gs:deleteInvoiceByIdRequest>
