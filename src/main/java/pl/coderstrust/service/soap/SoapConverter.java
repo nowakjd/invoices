@@ -109,11 +109,11 @@ class SoapConverter {
         city, zipCode);
   }
 
-  protected LocalDate unmarshal(String date) {
+  LocalDate unmarshal(String date) {
     return LocalDate.parse(date, DateTimeFormatter.ISO_DATE);
   }
 
-  protected String marshal(LocalDate localDate) {
+  private String marshal(LocalDate localDate) {
     return localDate.format(DateTimeFormatter.ISO_DATE);
   }
 }
