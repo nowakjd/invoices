@@ -21,7 +21,7 @@ import java.math.BigDecimal;
 
 public class PdfFactory {
 
-  void saveInvoice(Invoice invoice) throws DocumentException, FileNotFoundException {
+ public void saveInvoiceInFile(Invoice invoice) throws DocumentException, FileNotFoundException {
     final String FILE_NAME = "faktura.pdf";
     final Font TEXT = FontFactory.getFont(FontFactory.TIMES, 10, BaseColor.BLACK);
     final Font TEXT_LARGE = FontFactory.getFont(FontFactory.TIMES, 14, BaseColor.BLACK);
