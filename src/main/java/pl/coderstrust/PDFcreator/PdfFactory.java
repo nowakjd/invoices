@@ -21,80 +21,80 @@ import java.math.BigDecimal;
 
 public class PdfFactory {
 
+  private static final String FILE_NAME = "faktura.pdf";
+  private static final Font TEXT = FontFactory.getFont(FontFactory.TIMES, 10, BaseColor.BLACK);
+  private static final Font TEXT_LARGE = FontFactory.getFont(FontFactory.TIMES, 14, BaseColor.BLACK);
+  private static final Font TEXT_BOLD = FontFactory.getFont(FontFactory.TIMES_BOLD, 10, BaseColor.BLACK);
+  private static final Font TEXT_LARGE_BOLD = FontFactory.getFont(FontFactory.TIMES_BOLD, 14, BaseColor.BLACK);
+  private static final Font HEADER = FontFactory.getFont(FontFactory.TIMES_BOLD, 26, BaseColor.BLACK);
+  private static final Font TEXT_SMALL = FontFactory.getFont(FontFactory.TIMES, 8, BaseColor.BLACK);
+  private static final Font TEXT_SMALL_BOLD = FontFactory.getFont(FontFactory.TIMES_BOLD, 8, BaseColor.BLACK);
+
  public void saveInvoiceInFile(Invoice invoice) throws DocumentException, FileNotFoundException {
-    final String FILE_NAME = "faktura.pdf";
-    final Font TEXT = FontFactory.getFont(FontFactory.TIMES, 10, BaseColor.BLACK);
-    final Font TEXT_LARGE = FontFactory.getFont(FontFactory.TIMES, 14, BaseColor.BLACK);
-    final Font TEXT_BOLD = FontFactory.getFont(FontFactory.TIMES_BOLD, 10, BaseColor.BLACK);
-    final Font TEXT_LARGE_BOLD = FontFactory.getFont(FontFactory.TIMES_BOLD, 14, BaseColor.BLACK);
-    final Font HEADER = FontFactory.getFont(FontFactory.TIMES_BOLD, 26, BaseColor.BLACK);
-    final Font TEXT_SMALL = FontFactory.getFont(FontFactory.TIMES, 8, BaseColor.BLACK);
-    final Font TEXT_SMALL_BOLD = FontFactory.getFont(FontFactory.TIMES_BOLD, 8, BaseColor.BLACK);
     Document document = new Document();
     PdfWriter.getInstance(document, new FileOutputStream(FILE_NAME));
     document.open();
-    addHeader(HEADER, document);
-    addNumberOfInvoice(invoice, TEXT_LARGE, document);
+    addHeader(document);
+    addNumberOfInvoice(invoice, document);
     document.add(Chunk.NEWLINE);
     document.add(Chunk.NEWLINE);
-    addDateAndPlaceOfInvoice(invoice, TEXT, TEXT_BOLD, document);
+    addDateAndPlaceOfInvoice(invoice, document);
     document.add(Chunk.NEWLINE);
     document.add(Chunk.NEWLINE);
-    addSellerAndBuyer(invoice, TEXT, TEXT_LARGE_BOLD, document);
+    addSellerAndBuyer(invoice, document);
     document.add(Chunk.NEWLINE);
     document.add(Chunk.NEWLINE);
     document.add(Chunk.NEWLINE);
-    addTableWithInvoiceEntries(invoice, TEXT_SMALL, TEXT_SMALL_BOLD, document);
+    addTableWithInvoiceEntries(invoice, document);
     document.add(Chunk.NEWLINE);
     document.add(Chunk.NEWLINE);
-    addTotalPriceValue(invoice, TEXT_LARGE_BOLD, document);
+    addTotalPriceValue(invoice, document);
     document.add(Chunk.NEWLINE);
     document.add(Chunk.NEWLINE);
-    addPlaceForSignature(TEXT_BOLD, document);
+    addPlaceForSignature(document);
     document.close();
   }
 
-  private void addPlaceForSignature(Font TEXT_BOLD, Document document) throws DocumentException {
+  private void addPlaceForSignature(Document document) throws DocumentException {
     document.add(new Paragraph(
         "                                         Wystawil:                                                                                       Odebral:",
-        TEXT_BOLD));
+        PdfFactory.TEXT_BOLD));
   }
 
-  private void addTotalPriceValue(Invoice invoice, Font TEXT_LARGE_BOLD, Document document)
+  private void addTotalPriceValue(Invoice invoice, Document document)
       throws DocumentException {
     String priceTotal = "Do zaplaty: " + getTotalPrice(invoice);
-    document.add(new Paragraph(priceTotal, TEXT_LARGE_BOLD));
+    document.add(new Paragraph(priceTotal, PdfFactory.TEXT_LARGE_BOLD));
   }
 
-  private void addTableWithInvoiceEntries(Invoice invoice, Font TEXT_SMALL, Font TEXT_SMALL_BOLD,
-      Document document) throws DocumentException {
+  private void addTableWithInvoiceEntries(Invoice invoice, Document document) throws DocumentException {
     PdfPTable table = new PdfPTable(9);
     table.setWidthPercentage(100);
     table.setWidths(new int[]{4, 40, 8, 8, 8, 8, 8, 8, 8});
     table.setKeepTogether(false);
-    addHeaderRows(TEXT_SMALL_BOLD, table);
-    addInvoiceEntriesRows(invoice, TEXT_SMALL, table);
-    addBottomTotalValues(invoice, TEXT_SMALL, TEXT_SMALL_BOLD, table);
+    addHeaderRows(table);
+    addInvoiceEntriesRows(invoice, table);
+    addBottomTotalValues(invoice, table);
     document.add(table);
   }
 
-  private void addBottomTotalValues(Invoice invoice, Font TEXT_SMALL, Font TEXT_SMALL_BOLD,
-      PdfPTable table) {
+  private void addBottomTotalValues(Invoice invoice, PdfPTable table) {
     PdfPCell empty = new PdfPCell();
     empty.setBorder(Rectangle.NO_BORDER);
     table.addCell(empty);
     table.addCell(empty);
     table.addCell(empty);
     table.addCell(empty);
-    PdfPCell totalText = new PdfPCell(new Paragraph("RAZEM:", TEXT_SMALL_BOLD));
+    PdfPCell totalText = new PdfPCell(new Paragraph("RAZEM:", PdfFactory.TEXT_SMALL_BOLD));
     totalText.setBorder(Rectangle.NO_BORDER);
     table.addCell(totalText);
     PdfPCell netTotal = new PdfPCell(
-        new Paragraph(getNetPriceTotal(invoice).toString(), TEXT_SMALL));
+        new Paragraph(getNetPriceTotal(invoice).toString(), PdfFactory.TEXT_SMALL));
     table.addCell(netTotal);
     table.addCell(empty);
     table.addCell(totalText);
-    PdfPCell netTotal2 = new PdfPCell(new Paragraph(getTotalPrice(invoice).toString(), TEXT_SMALL));
+    PdfPCell netTotal2 = new PdfPCell(new Paragraph(getTotalPrice(invoice).toString(),
+        PdfFactory.TEXT_SMALL));
     table.addCell(netTotal2);
   }
 
@@ -118,47 +118,49 @@ public class PdfFactory {
     return priceTotal;
   }
 
-  private void addInvoiceEntriesRows(Invoice invoice, Font TEXT_SMALL, PdfPTable table) {
+  private void addInvoiceEntriesRows(Invoice invoice, PdfPTable table) {
     for (int i = 0; i < invoice.getEntries().size(); i++) {
-      PdfPCell numberEntryCell = new PdfPCell(new Paragraph(Integer.toString(i + 1), TEXT_SMALL));
+      PdfPCell numberEntryCell = new PdfPCell(new Paragraph(Integer.toString(i + 1),
+          PdfFactory.TEXT_SMALL));
       table.addCell(numberEntryCell);
       String productName = invoice.getEntries().get(i).getProductName();
-      PdfPCell productNameCell = new PdfPCell(new Paragraph(productName, TEXT_SMALL));
+      PdfPCell productNameCell = new PdfPCell(new Paragraph(productName, PdfFactory.TEXT_SMALL));
       table.addCell(productNameCell);
       String amount = Double.toString(invoice.getEntries().get(i).getAmount());
-      PdfPCell amountCell = new PdfPCell(new Paragraph(amount, TEXT_SMALL));
+      PdfPCell amountCell = new PdfPCell(new Paragraph(amount, PdfFactory.TEXT_SMALL));
       table.addCell(amountCell);
       String unit = invoice.getEntries().get(i).getUnit();
-      PdfPCell unitCell = new PdfPCell(new Paragraph(unit, TEXT_SMALL));
+      PdfPCell unitCell = new PdfPCell(new Paragraph(unit, PdfFactory.TEXT_SMALL));
       table.addCell(unitCell);
       String netValue = invoice.getEntries().get(i).getNetValue().toString();
-      PdfPCell netValueCell = new PdfPCell(new Paragraph(netValue, TEXT_SMALL));
+      PdfPCell netValueCell = new PdfPCell(new Paragraph(netValue, PdfFactory.TEXT_SMALL));
       table.addCell(netValueCell);
       BigDecimal amountBigDecimal = new BigDecimal(amount);
       String netValueTotal = invoice.getEntries().get(i).getNetValue().multiply(amountBigDecimal)
           .toString();
-      PdfPCell netValueTotalCell = new PdfPCell(new Paragraph(netValueTotal, TEXT_SMALL));
+      PdfPCell netValueTotalCell = new PdfPCell(new Paragraph(netValueTotal, PdfFactory.TEXT_SMALL));
       table.addCell(netValueTotalCell);
       String vatRate = invoice.getEntries().get(i).getVatRate().getValue() * 100 + " %";
-      PdfPCell vatRateCell = new PdfPCell(new Paragraph(vatRate, TEXT_SMALL));
+      PdfPCell vatRateCell = new PdfPCell(new Paragraph(vatRate, PdfFactory.TEXT_SMALL));
       table.addCell(vatRateCell);
       BigDecimal vatPriceTotal = new BigDecimal(netValueTotal)
           .multiply(new BigDecimal(invoice.getEntries().get(i).getVatRate().getValue()));
       String vatPriceTotalRound = String.format("%.2f", vatPriceTotal.doubleValue());
-      PdfPCell vatPriceTotalCell = new PdfPCell(new Paragraph(vatPriceTotalRound, TEXT_SMALL));
+      PdfPCell vatPriceTotalCell = new PdfPCell(new Paragraph(vatPriceTotalRound,
+          PdfFactory.TEXT_SMALL));
       table.addCell(vatPriceTotalCell);
       String price = invoice.getEntries().get(i).getPrice()
           .multiply(new BigDecimal(invoice.getEntries().get(i).getAmount())).toString();
-      PdfPCell priceCell = new PdfPCell(new Paragraph(price, TEXT_SMALL));
+      PdfPCell priceCell = new PdfPCell(new Paragraph(price, PdfFactory.TEXT_SMALL));
       table.addCell(priceCell);
     }
   }
 
-  private void addHeaderRows(Font TEXT_SMALL_BOLD, PdfPTable table) {
+  private void addHeaderRows(PdfPTable table) {
     String[] tableLabels = {"Lp.", "Nazwa", "ilosc", "j.m.", "jedn. netto", "Netto[zl]",
         "VAT[%]", "VAT [zl]", "Brutto[zl]"};
     for (int i = 0; i < 9; i++) {
-      Paragraph paragraph = new Paragraph(tableLabels[i], TEXT_SMALL_BOLD);
+      Paragraph paragraph = new Paragraph(tableLabels[i], PdfFactory.TEXT_SMALL_BOLD);
       paragraph.setAlignment(Element.ALIGN_CENTER);
       PdfPCell cell = new PdfPCell(paragraph);
       cell.setBackgroundColor(new BaseColor(220, 220, 220));
@@ -166,20 +168,19 @@ public class PdfFactory {
     }
   }
 
-  private void addSellerAndBuyer(Invoice invoice, Font TEXT, Font TEXT_LARGE_BOLD,
-      Document document) throws DocumentException {
+  private void addSellerAndBuyer(Invoice invoice, Document document) throws DocumentException {
     PdfPTable table = new PdfPTable(2);
     table.setWidthPercentage(100);
-    addSeller(invoice, TEXT, TEXT_LARGE_BOLD, table);
-    addBuyer(invoice, TEXT, TEXT_LARGE_BOLD, table);
+    addSeller(invoice, table);
+    addBuyer(invoice, table);
     document.add(table);
   }
 
-  private void addSeller(Invoice invoice, Font TEXT, Font TEXT_LARGE_BOLD, PdfPTable table) {
-    Phrase seller = new Phrase("Sprzedawca:", TEXT);
+  private void addSeller(Invoice invoice, PdfPTable table) {
+    Phrase seller = new Phrase("Sprzedawca:", PdfFactory.TEXT);
     seller.add(Chunk.NEWLINE);
     seller.add(Chunk.NEWLINE);
-    Chunk name = new Chunk(invoice.getSeller().getCompanyName(), TEXT_LARGE_BOLD);
+    Chunk name = new Chunk(invoice.getSeller().getCompanyName(), PdfFactory.TEXT_LARGE_BOLD);
     seller.add(name);
     seller.add(Chunk.NEWLINE);
     String street =
@@ -204,11 +205,11 @@ public class PdfFactory {
     table.addCell(cell);
   }
 
-  private void addBuyer(Invoice invoice, Font TEXT, Font TEXT_LARGE_BOLD, PdfPTable table) {
-    Phrase buyer = new Phrase("Nabywca:", TEXT);
+  private void addBuyer(Invoice invoice, PdfPTable table) {
+    Phrase buyer = new Phrase("Nabywca:", PdfFactory.TEXT);
     buyer.add(Chunk.NEWLINE);
     buyer.add(Chunk.NEWLINE);
-    Chunk name = new Chunk(invoice.getBuyer().getCompanyName(), TEXT_LARGE_BOLD);
+    Chunk name = new Chunk(invoice.getBuyer().getCompanyName(), PdfFactory.TEXT_LARGE_BOLD);
     buyer.add(name);
     buyer.add(Chunk.NEWLINE);
     String street =
@@ -233,30 +234,29 @@ public class PdfFactory {
     table.addCell(cell);
   }
 
-  private void addDateAndPlaceOfInvoice(Invoice invoice, Font TEXT, Font TEXT_BOLD,
-      Document document) throws DocumentException {
+  private void addDateAndPlaceOfInvoice(Invoice invoice, Document document) throws DocumentException {
     String datePlaceOfInvoice =
         invoice.getSeller().getAddress().getCity() + ", " + invoice.getIssueDate();
-    Chunk chunk1 = new Chunk("Miejsce i data wystawienia: ", TEXT);
-    Chunk chunk2 = new Chunk(datePlaceOfInvoice, TEXT_BOLD);
+    Chunk chunk1 = new Chunk("Miejsce i data wystawienia: ", PdfFactory.TEXT);
+    Chunk chunk2 = new Chunk(datePlaceOfInvoice, PdfFactory.TEXT_BOLD);
     Paragraph paragraph = new Paragraph(chunk1);
     paragraph.add(chunk2);
     paragraph.setAlignment(Element.ALIGN_RIGHT);
     document.add(paragraph);
   }
 
-  private void addNumberOfInvoice(Invoice invoice, Font TEXT_LARGE, Document document)
+  private void addNumberOfInvoice(Invoice invoice, Document document)
       throws DocumentException {
     Paragraph number = new Paragraph();
-    number.setFont(TEXT_LARGE);
+    number.setFont(PdfFactory.TEXT_LARGE);
     number.setAlignment(Element.ALIGN_CENTER);
     number.add("nr: " + invoice.getIssue());
     document.add(number);
   }
 
-  private void addHeader(Font HEADER, Document document) throws DocumentException {
+  private void addHeader(Document document) throws DocumentException {
     Paragraph title = new Paragraph();
-    title.setFont(HEADER);
+    title.setFont(PdfFactory.HEADER);
     title.setAlignment(Element.ALIGN_CENTER);
     title.add("Faktura VAT");
     document.add(title);
