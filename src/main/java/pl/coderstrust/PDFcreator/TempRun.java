@@ -38,7 +38,7 @@ public class TempRun {
     Invoice invoice = new Invoice(1L, LocalDate.now(), invoiceEntries, "159/01/2019", company,
         company);
 
-    pdf.saveInvoice(invoice);
+    pdf.saveInvoiceInFile(invoice);
 
   }
 
