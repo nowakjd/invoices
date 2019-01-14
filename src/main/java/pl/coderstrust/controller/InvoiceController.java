@@ -110,7 +110,7 @@ public class InvoiceController {
   Collection<Invoice> findByDate(
       @ApiParam(value = "Starting date", required = true) @DateTimeFormat(iso = ISO.DATE)
       @RequestParam LocalDate fromDate, @ApiParam(value = "Ending date", required = true)
-  @DateTimeFormat(iso = ISO.DATE) @RequestParam LocalDate toDate)
+      @DateTimeFormat(iso = ISO.DATE) @RequestParam LocalDate toDate)
       throws DatabaseOperationException {
     return invoiceService.findByDate(fromDate, toDate);
   }
@@ -128,7 +128,7 @@ public class InvoiceController {
   }
 
   @RequestMapping("/file/{id}")
-  public void downloadPDFResource(HttpServletResponse response, @PathVariable Long id)
+  public void downloadPdfResource(HttpServletResponse response, @PathVariable Long id)
       throws IOException, DatabaseOperationException, DocumentException {
     Invoice invoice = invoiceService.findOne(id);
     pdfFactory.saveInvoiceInFile(invoice);
@@ -144,7 +144,7 @@ public class InvoiceController {
       }
       response.setContentType(mimeType);
       response.setHeader("Content-Disposition",
-          String.format("attachment; filename=\"" + file.getName() + "\""));
+          "attachment; filename=\"" + file.getName() + "\"");
       response.setContentLength((int) file.length());
       InputStream inputStream = new BufferedInputStream(new FileInputStream(file));
       FileCopyUtils.copy(inputStream, response.getOutputStream());
