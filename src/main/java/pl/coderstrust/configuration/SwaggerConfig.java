@@ -27,8 +27,12 @@ public class SwaggerConfig {
 
   private ApiInfo apiInfo() {
     return new ApiInfoBuilder()
-        .title("Spring Boot REST API")
-        .description("\"Spring Boot REST API for Invoices App\"")
+        .title("Invoices API")
+        .description(
+            "The below panel presents documentation all endpoints, parameters available "
+                + "to the Invoices API. Based on it you can verify correctness of execution "
+                + "such operations as adding/updating invoice, finding invoices by buyer/seller/"
+                + "id/range of date and removing invoice")
         .version("1.0")
         .license("Apache License Version 2.0")
         .licenseUrl("https://www.apache.org/licenses/LICENSE-2.0\"")
