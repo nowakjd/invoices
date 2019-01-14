@@ -1,6 +1,7 @@
 package pl.coderstrust.configuration;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -10,6 +11,15 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+  @Value("${spring.security.username}")
+  private String userName;
+  @Value("${spring.security.userpassword}")
+  private String userPassword;
+  @Value("${spring.security.adminname}")
+  private String adminName;
+  @Value("${spring.security.adminpassword}")
+  private String adminPassword;
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
@@ -23,8 +33,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   @Autowired
   public void securityUsers(AuthenticationManagerBuilder authentication) throws Exception {
     authentication.inMemoryAuthentication()
-        .withUser("user").password("{noop}user").roles("USER")
+        .withUser(userName).password(userPassword).roles("USER")
         .and()
-        .withUser("admin").password("{noop}admin").roles("ADMIN");
+        .withUser(adminName).password(adminPassword).roles("ADMIN");
   }
 }
