@@ -4,8 +4,8 @@ import com.itextpdf.text.DocumentException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
-import pl.coderstrust.PDFcreator.PdfFactory;
 import pl.coderstrust.model.Invoice;
+import pl.coderstrust.pdfcreator.PdfFactory;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -21,12 +21,11 @@ public class PdfService {
   private PdfFactory pdfFactory = new PdfFactory();
 
   @Value("${pdf.filename}")
-  private String FILE_NAME;
+  private String fileName;
 
   public void saveToFile(HttpServletResponse response, Invoice invoice)
       throws IOException, DocumentException {
-    pdfFactory.saveInvoiceInFile(invoice, FILE_NAME);
-    File file = new File(FILE_NAME);
+    File file = pdfFactory.saveInvoiceInFile(invoice, fileName);
     if (file.exists()) {
       String mimeType = URLConnection.guessContentTypeFromName(file.getName());
       if (mimeType == null) {
@@ -40,5 +39,4 @@ public class PdfService {
       FileCopyUtils.copy(inputStream, response.getOutputStream());
     }
   }
-
 }

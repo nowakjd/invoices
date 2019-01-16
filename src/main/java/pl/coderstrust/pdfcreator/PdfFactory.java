@@ -1,4 +1,4 @@
-package pl.coderstrust.PDFcreator;
+package pl.coderstrust.pdfcreator;
 
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Chunk;
@@ -15,6 +15,7 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import pl.coderstrust.model.Invoice;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.math.BigDecimal;
@@ -35,10 +36,11 @@ public class PdfFactory {
   private static final Font TEXT_SMALL_BOLD = FontFactory
       .getFont(FontFactory.TIMES_BOLD, 8, BaseColor.BLACK);
 
-  public void saveInvoiceInFile(Invoice invoice, String fileName)
+  public File saveInvoiceInFile(Invoice invoice, String fileName)
       throws DocumentException, FileNotFoundException {
+    File pdfFile = new File(fileName);
     Document document = new Document();
-    PdfWriter.getInstance(document, new FileOutputStream(fileName));
+    PdfWriter.getInstance(document, new FileOutputStream(pdfFile));
     document.open();
     addHeader(document);
     addNumberOfInvoice(invoice, document);
@@ -59,6 +61,7 @@ public class PdfFactory {
     addEmptyLine(document);
     addPlaceForSignature(document);
     document.close();
+    return pdfFile;
   }
 
   private void addEmptyLine(Document document) throws DocumentException {
@@ -67,7 +70,8 @@ public class PdfFactory {
 
   private void addPlaceForSignature(Document document) throws DocumentException {
     document.add(new Paragraph(
-        "                                         Wystawil:                                                                                       Odebral:",
+        "                                         Wystawil:                                  "
+            + "                                                     Odebral:",
         PdfFactory.TEXT_BOLD));
   }
 

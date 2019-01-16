@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import pl.coderstrust.PDFcreator.PdfFactory;
 import pl.coderstrust.database.DatabaseOperationException;
 import pl.coderstrust.model.Invoice;
 import pl.coderstrust.service.InvoiceService;
@@ -107,7 +106,7 @@ public class InvoiceController {
   Collection<Invoice> findByDate(
       @ApiParam(value = "Starting date", required = true) @DateTimeFormat(iso = ISO.DATE)
       @RequestParam LocalDate fromDate, @ApiParam(value = "Ending date", required = true)
-  @DateTimeFormat(iso = ISO.DATE) @RequestParam LocalDate toDate)
+      @DateTimeFormat(iso = ISO.DATE) @RequestParam LocalDate toDate)
       throws DatabaseOperationException {
     return invoiceService.findByDate(fromDate, toDate);
   }
@@ -127,12 +126,11 @@ public class InvoiceController {
   @RequestMapping("/file/{id}")
   public void downloadPdfResource(HttpServletResponse response, @PathVariable Long id)
       throws IOException, DatabaseOperationException, DocumentException {
-    Invoice invoice =invoiceService.findOne(id);
-    pdfService.saveToFile(response,invoice);
+    Invoice invoice = invoiceService.findOne(id);
+    pdfService.saveToFile(response, invoice);
 
 
   }
-
 
 
 }
