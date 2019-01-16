@@ -4,9 +4,9 @@ import com.itextpdf.text.DocumentException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,13 +19,9 @@ import pl.coderstrust.PDFcreator.PdfFactory;
 import pl.coderstrust.database.DatabaseOperationException;
 import pl.coderstrust.model.Invoice;
 import pl.coderstrust.service.InvoiceService;
+import pl.coderstrust.service.PdfService;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URLConnection;
 import java.time.LocalDate;
 import java.util.Collection;
 import javax.servlet.http.HttpServletResponse;
@@ -37,8 +33,9 @@ import javax.servlet.http.HttpServletResponse;
 public class InvoiceController {
 
   private InvoiceService invoiceService;
-  private static final String PDF_FILE = "faktura.pdf";
-  private PdfFactory pdfFactory = new PdfFactory();
+
+  @Autowired
+  private PdfService pdfService;
 
   public InvoiceController(InvoiceService invoiceService) {
     this.invoiceService = invoiceService;
@@ -110,7 +107,7 @@ public class InvoiceController {
   Collection<Invoice> findByDate(
       @ApiParam(value = "Starting date", required = true) @DateTimeFormat(iso = ISO.DATE)
       @RequestParam LocalDate fromDate, @ApiParam(value = "Ending date", required = true)
-      @DateTimeFormat(iso = ISO.DATE) @RequestParam LocalDate toDate)
+  @DateTimeFormat(iso = ISO.DATE) @RequestParam LocalDate toDate)
       throws DatabaseOperationException {
     return invoiceService.findByDate(fromDate, toDate);
   }
@@ -130,25 +127,12 @@ public class InvoiceController {
   @RequestMapping("/file/{id}")
   public void downloadPdfResource(HttpServletResponse response, @PathVariable Long id)
       throws IOException, DatabaseOperationException, DocumentException {
-    Invoice invoice = invoiceService.findOne(id);
-    pdfFactory.saveInvoiceInFile(invoice);
-    downloadPdf(response);
+    Invoice invoice =invoiceService.findOne(id);
+    pdfService.saveToFile(response,invoice);
+
+
   }
 
-  private void downloadPdf(HttpServletResponse response) throws IOException {
-    File file = new File(PDF_FILE);
-    if (file.exists()) {
-      String mimeType = URLConnection.guessContentTypeFromName(file.getName());
-      if (mimeType == null) {
-        mimeType = "application/pdf";
-      }
-      response.setContentType(mimeType);
-      response.setHeader("Content-Disposition",
-          "attachment; filename=\"" + file.getName() + "\"");
-      response.setContentLength((int) file.length());
-      InputStream inputStream = new BufferedInputStream(new FileInputStream(file));
-      FileCopyUtils.copy(inputStream, response.getOutputStream());
-    }
-  }
+
 
 }
