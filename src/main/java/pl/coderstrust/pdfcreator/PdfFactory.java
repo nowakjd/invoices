@@ -15,13 +15,10 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import pl.coderstrust.model.Invoice;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
 
 public class PdfFactory {
-
 
   private static final Font TEXT = FontFactory.getFont(FontFactory.TIMES, 10, BaseColor.BLACK);
   private static final Font TEXT_LARGE = FontFactory
@@ -36,11 +33,11 @@ public class PdfFactory {
   private static final Font TEXT_SMALL_BOLD = FontFactory
       .getFont(FontFactory.TIMES_BOLD, 8, BaseColor.BLACK);
 
-  public File saveInvoiceInFile(Invoice invoice, String fileName)
-      throws DocumentException, FileNotFoundException {
-    File pdfFile = new File(fileName);
+  public ByteArrayOutputStream savePdfInvoiceInMemory(Invoice invoice)
+      throws DocumentException {
+    ByteArrayOutputStream fileStream = new ByteArrayOutputStream();
     Document document = new Document();
-    PdfWriter.getInstance(document, new FileOutputStream(pdfFile));
+    PdfWriter.getInstance(document, fileStream);
     document.open();
     addHeader(document);
     addNumberOfInvoice(invoice, document);
@@ -61,7 +58,7 @@ public class PdfFactory {
     addEmptyLine(document);
     addPlaceForSignature(document);
     document.close();
-    return pdfFile;
+    return fileStream;
   }
 
   private void addEmptyLine(Document document) throws DocumentException {
