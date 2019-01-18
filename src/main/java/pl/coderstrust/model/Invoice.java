@@ -105,7 +105,9 @@ public class Invoice {
     if (issueDate != null ? !issueDate.equals(invoice.issueDate) : invoice.issueDate != null) {
       return false;
     }
-    if (entries != null ? !entries.equals(invoice.entries) : invoice.entries != null) {
+    if (entries != null
+        ? !(entries.containsAll(invoice.entries) && invoice.entries.containsAll(entries))
+        : invoice.entries != null) {
       return false;
     }
     if (issue != null ? !issue.equals(invoice.issue) : invoice.issue != null) {
