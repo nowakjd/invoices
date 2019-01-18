@@ -7,9 +7,8 @@ import org.springframework.util.FileCopyUtils;
 import pl.coderstrust.model.Invoice;
 import pl.coderstrust.pdfcreator.PdfFactory;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLConnection;
@@ -23,20 +22,18 @@ public class PdfService {
   @Value("${pdf.filename}")
   private String fileName;
 
-  public void saveToFile(HttpServletResponse response, Invoice invoice)
+  public void downloadPdfFile(HttpServletResponse response, Invoice invoice)
       throws IOException, DocumentException {
-    File file = pdfFactory.saveInvoiceInFile(invoice, fileName);
-    if (file.exists()) {
-      String mimeType = URLConnection.guessContentTypeFromName(file.getName());
-      if (mimeType == null) {
-        mimeType = "application/pdf";
-      }
-      response.setContentType(mimeType);
-      response.setHeader("Content-Disposition",
-          "attachment; filename=\"" + file.getName() + "\"");
-      response.setContentLength((int) file.length());
-      InputStream inputStream = new BufferedInputStream(new FileInputStream(file));
-      FileCopyUtils.copy(inputStream, response.getOutputStream());
+    ByteArrayOutputStream fileStreamOut = pdfFactory.savePdfInvoiceInMemory(invoice);
+    byte[] buf = fileStreamOut.toByteArray();
+    String mimeType = URLConnection.guessContentTypeFromName(fileName);
+    if (mimeType == null) {
+      mimeType = "application/pdf";
     }
+    response.setContentType(mimeType);
+    response.setHeader("Content-Disposition",
+        "attachment; filename=\"" + fileName + "\"");
+    InputStream inputStream = new ByteArrayInputStream(buf);
+    FileCopyUtils.copy(inputStream, response.getOutputStream());
   }
 }
