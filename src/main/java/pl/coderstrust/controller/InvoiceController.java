@@ -4,6 +4,7 @@ import com.itextpdf.text.DocumentException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -33,6 +34,7 @@ public class InvoiceController {
   private InvoiceService invoiceService;
   private PdfService pdfService;
 
+  @Autowired
   public InvoiceController(InvoiceService invoiceService, PdfService pdfService) {
     this.invoiceService = invoiceService;
     this.pdfService = pdfService;
@@ -126,9 +128,5 @@ public class InvoiceController {
       throws IOException, DatabaseOperationException, DocumentException {
     Invoice invoice = invoiceService.findOne(id);
     pdfService.downloadPdfFile(response, invoice);
-
-
   }
-
-
 }

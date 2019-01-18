@@ -35,9 +35,9 @@ public class PdfFactory {
 
   public ByteArrayOutputStream savePdfInvoiceInMemory(Invoice invoice)
       throws DocumentException {
-    ByteArrayOutputStream fileStream = new ByteArrayOutputStream();
+    ByteArrayOutputStream streamOfPdf = new ByteArrayOutputStream();
     Document document = new Document();
-    PdfWriter.getInstance(document, fileStream);
+    PdfWriter.getInstance(document, streamOfPdf);
     document.open();
     addHeader(document);
     addNumberOfInvoice(invoice, document);
@@ -58,7 +58,7 @@ public class PdfFactory {
     addEmptyLine(document);
     addPlaceForSignature(document);
     document.close();
-    return fileStream;
+    return streamOfPdf;
   }
 
   private void addEmptyLine(Document document) throws DocumentException {
@@ -275,6 +275,4 @@ public class PdfFactory {
     title.add("Faktura VAT");
     document.add(title);
   }
-
-
 }
