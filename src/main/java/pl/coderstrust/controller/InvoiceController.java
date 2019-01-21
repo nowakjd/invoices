@@ -1,8 +1,10 @@
 package pl.coderstrust.controller;
 
+import com.itextpdf.text.DocumentException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,9 +18,13 @@ import org.springframework.web.bind.annotation.RestController;
 import pl.coderstrust.database.DatabaseOperationException;
 import pl.coderstrust.model.Invoice;
 import pl.coderstrust.service.InvoiceService;
+import pl.coderstrust.service.PdfService;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Collection;
+import javax.servlet.http.HttpServletResponse;
+
 
 @RestController
 @RequestMapping("/invoices")
@@ -26,9 +32,12 @@ import java.util.Collection;
 public class InvoiceController {
 
   private InvoiceService invoiceService;
+  private PdfService pdfService;
 
-  public InvoiceController(InvoiceService invoiceService) {
+  @Autowired
+  public InvoiceController(InvoiceService invoiceService, PdfService pdfService) {
     this.invoiceService = invoiceService;
+    this.pdfService = pdfService;
   }
 
   @PostMapping
@@ -97,7 +106,7 @@ public class InvoiceController {
   Collection<Invoice> findByDate(
       @ApiParam(value = "Starting date", required = true) @DateTimeFormat(iso = ISO.DATE)
       @RequestParam LocalDate fromDate, @ApiParam(value = "Ending date", required = true)
-      @DateTimeFormat(iso = ISO.DATE) @RequestParam LocalDate toDate)
+  @DateTimeFormat(iso = ISO.DATE) @RequestParam LocalDate toDate)
       throws DatabaseOperationException {
     return invoiceService.findByDate(fromDate, toDate);
   }
@@ -112,5 +121,12 @@ public class InvoiceController {
       @ApiParam(value = "The invoice ID to be found", required = true) @PathVariable Long id)
       throws DatabaseOperationException {
     return invoiceService.findOne(id);
+  }
+
+  @RequestMapping("/pdf/{id}")
+  public void downloadPdfFile(HttpServletResponse response, @PathVariable Long id)
+      throws IOException, DatabaseOperationException, DocumentException {
+    Invoice invoice = invoiceService.findOne(id);
+    pdfService.downloadPdfFile(response, invoice);
   }
 }
