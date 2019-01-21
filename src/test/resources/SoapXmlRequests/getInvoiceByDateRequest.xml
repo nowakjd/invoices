@@ -1,0 +1,4 @@
+<gs:getInvoicesByDateRequest xmlns:gs="http://invoiceapp-service.com">
+  <gs:fromDate>2018-02-20</gs:fromDate>
+  <gs:toDate>2018-02-25</gs:toDate>
+</gs:getInvoicesByDateRequest>

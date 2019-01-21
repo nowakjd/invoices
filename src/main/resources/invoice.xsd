@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:tns="http://invoiceapp-service.com"
+  targetNamespace="http://invoiceapp-service.com" elementFormDefault="qualified">
+
+  <xs:element name="saveInvoiceRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="invoice" type="tns:invoice"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="saveInvoiceResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="invoice" type="tns:invoice"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="getInvoicesRequest">
+    <xs:complexType>
+      <xs:sequence>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="getInvoicesResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="invoicesList" type="tns:invoicesList"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="getInvoiceByIdRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="id" type="xs:long"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="getInvoiceByIdResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="invoice" type="tns:invoice"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="getInvoicesByDateRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="fromDate" type="xs:string"/>
+        <xs:element name="toDate" type="xs:string"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="getInvoicesByDateResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="invoicesList" type="tns:invoicesList"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="getInvoicesByBuyerRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="companyId" type="xs:long"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="getInvoicesByBuyerResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="invoicesList" type="tns:invoicesList"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="getInvoicesBySellerRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="companyId" type="xs:long"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="getInvoicesBySellerResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="invoicesList" type="tns:invoicesList"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="deleteInvoiceByIdRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="id" type="xs:long"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="deleteInvoiceByIdResponse">
+    <xs:complexType>
+      <xs:sequence>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:complexType name="invoice">
+    <xs:sequence>
+      <xs:element name="id" type="xs:long"/>
+      <xs:element name="issueDate" type="xs:string"/>
+      <xs:element name="entries" type="tns:invoiceEntry" maxOccurs="unbounded"/>
+      <xs:element name="issue" type="xs:string"/>
+      <xs:element name="seller" type="tns:company"/>
+      <xs:element name="buyer" type="tns:company"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="invoicesList">
+    <xs:sequence>
+      <xs:element name="invoice" type="tns:invoice" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="invoiceEntry">
+    <xs:sequence>
+      <xs:element name="id" type="xs:long"/>
+      <xs:element name="amount" type="xs:double"/>
+      <xs:element name="productName" type="xs:string"/>
+      <xs:element name="unit" type="xs:string"/>
+      <xs:element name="price" type="xs:decimal"/>
+      <xs:element name="vatRate" type="tns:vat"/>
+      <xs:element name="netValue" type="xs:decimal"/>
+      <xs:element name="grossValue" type="xs:decimal"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="company">
+    <xs:sequence>
+      <xs:element name="companyId" type="xs:long"/>
+      <xs:element name="companyName" type="xs:string"/>
+      <xs:element name="address" type="tns:address"/>
+      <xs:element name="taxIdentificationNumber" type="xs:string"/>
+      <xs:element name="accountNumber" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:simpleType name="vat">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="RATE_0"/>
+      <xs:enumeration value="RATE_5"/>
+      <xs:enumeration value="RATE_8"/>
+      <xs:enumeration value="RATE_23"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:complexType name="address">
+    <xs:sequence>
+      <xs:element name="id" type="xs:long"/>
+      <xs:element name="street" type="xs:string"/>
+      <xs:element name="number" type="xs:string"/>
+      <xs:element name="city" type="xs:string"/>
+      <xs:element name="zipCode" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

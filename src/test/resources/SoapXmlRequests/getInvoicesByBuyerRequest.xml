@@ -1,0 +1,3 @@
+<gs:getInvoicesByBuyerRequest xmlns:gs="http://invoiceapp-service.com">
+  <gs:companyId>14</gs:companyId>
+</gs:getInvoicesByBuyerRequest>
