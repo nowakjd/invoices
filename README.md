@@ -1,1 +1,1 @@
-# project-7-grzegorz-michal-monika
+# project-7-grzegorz-michal-jedrzej
